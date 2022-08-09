@@ -35,6 +35,10 @@ func (m *TestAllTypesProto2_NestedMessage) CloneVT() *TestAllTypesProto2_NestedM
 	return r
 }
 
+func (m *TestAllTypesProto2_NestedMessage) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *TestAllTypesProto2_Data) CloneVT() *TestAllTypesProto2_Data {
 	if m == nil {
 		return (*TestAllTypesProto2_Data)(nil)
@@ -51,12 +55,20 @@ func (m *TestAllTypesProto2_Data) CloneVT() *TestAllTypesProto2_Data {
 	return r
 }
 
+func (m *TestAllTypesProto2_Data) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *TestAllTypesProto2_MessageSetCorrect) CloneVT() *TestAllTypesProto2_MessageSetCorrect {
 	if m == nil {
 		return (*TestAllTypesProto2_MessageSetCorrect)(nil)
 	}
 	r := &TestAllTypesProto2_MessageSetCorrect{}
 	return r
+}
+
+func (m *TestAllTypesProto2_MessageSetCorrect) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *TestAllTypesProto2_MessageSetCorrectExtension1) CloneVT() *TestAllTypesProto2_MessageSetCorrectExtension1 {
@@ -71,6 +83,10 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) CloneVT() *TestAllTypes
 	return r
 }
 
+func (m *TestAllTypesProto2_MessageSetCorrectExtension1) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *TestAllTypesProto2_MessageSetCorrectExtension2) CloneVT() *TestAllTypesProto2_MessageSetCorrectExtension2 {
 	if m == nil {
 		return (*TestAllTypesProto2_MessageSetCorrectExtension2)(nil)
@@ -81,6 +97,10 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) CloneVT() *TestAllTypes
 		r.I = &tmpVal
 	}
 	return r
+}
+
+func (m *TestAllTypesProto2_MessageSetCorrectExtension2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *TestAllTypesProto2) CloneVT() *TestAllTypesProto2 {
@@ -699,6 +719,10 @@ func (m *TestAllTypesProto2) CloneVT() *TestAllTypesProto2 {
 	return r
 }
 
+func (m *TestAllTypesProto2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *TestAllTypesProto2_OneofUint32) CloneVT() isTestAllTypesProto2_OneofField {
 	if m == nil {
 		return (*TestAllTypesProto2_OneofUint32)(nil)
@@ -804,6 +828,10 @@ func (m *ForeignMessageProto2) CloneVT() *ForeignMessageProto2 {
 	return r
 }
 
+func (m *ForeignMessageProto2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *UnknownToTestAllTypes_OptionalGroup) CloneVT() *UnknownToTestAllTypes_OptionalGroup {
 	if m == nil {
 		return (*UnknownToTestAllTypes_OptionalGroup)(nil)
@@ -814,6 +842,10 @@ func (m *UnknownToTestAllTypes_OptionalGroup) CloneVT() *UnknownToTestAllTypes_O
 		r.A = &tmpVal
 	}
 	return r
+}
+
+func (m *UnknownToTestAllTypes_OptionalGroup) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *UnknownToTestAllTypes) CloneVT() *UnknownToTestAllTypes {
@@ -844,6 +876,10 @@ func (m *UnknownToTestAllTypes) CloneVT() *UnknownToTestAllTypes {
 	return r
 }
 
+func (m *UnknownToTestAllTypes) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *NullHypothesisProto2) CloneVT() *NullHypothesisProto2 {
 	if m == nil {
 		return (*NullHypothesisProto2)(nil)
@@ -852,12 +888,20 @@ func (m *NullHypothesisProto2) CloneVT() *NullHypothesisProto2 {
 	return r
 }
 
+func (m *NullHypothesisProto2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *EnumOnlyProto2) CloneVT() *EnumOnlyProto2 {
 	if m == nil {
 		return (*EnumOnlyProto2)(nil)
 	}
 	r := &EnumOnlyProto2{}
 	return r
+}
+
+func (m *EnumOnlyProto2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *OneStringProto2) CloneVT() *OneStringProto2 {
@@ -870,6 +914,10 @@ func (m *OneStringProto2) CloneVT() *OneStringProto2 {
 		r.Data = &tmpVal
 	}
 	return r
+}
+
+func (m *OneStringProto2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (this *TestAllTypesProto2_NestedMessage) EqualVT(that *TestAllTypesProto2_NestedMessage) bool {

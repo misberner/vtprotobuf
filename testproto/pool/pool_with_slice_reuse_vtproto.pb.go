@@ -6,6 +6,7 @@ package pool
 
 import (
 	fmt "fmt"
+	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	io "io"
 	sync "sync"
@@ -31,6 +32,10 @@ func (m *Test1) CloneVT() *Test1 {
 	return r
 }
 
+func (m *Test1) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *Test2) CloneVT() *Test2 {
 	if m == nil {
 		return (*Test2)(nil)
@@ -44,6 +49,10 @@ func (m *Test2) CloneVT() *Test2 {
 		r.Sl = tmpContainer
 	}
 	return r
+}
+
+func (m *Test2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *Slice2) CloneVT() *Slice2 {
@@ -74,6 +83,10 @@ func (m *Slice2) CloneVT() *Slice2 {
 	return r
 }
 
+func (m *Slice2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *Element2) CloneVT() *Element2 {
 	if m == nil {
 		return (*Element2)(nil)
@@ -82,6 +95,10 @@ func (m *Element2) CloneVT() *Element2 {
 		A: m.A,
 	}
 	return r
+}
+
+func (m *Element2) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (this *Test1) EqualVT(that *Test1) bool {

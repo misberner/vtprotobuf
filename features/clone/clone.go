@@ -9,14 +9,21 @@ import (
 	"github.com/planetscale/vtprotobuf/generator"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"path"
+	"regexp"
+	"strings"
 )
 
 const (
-	cloneName = "CloneVT"
+	cloneName        = "CloneVT"
+	cloneGenericName = "CloneGenericVT"
 )
 
 var (
-	protoPkg = protogen.GoImportPath("google.golang.org/protobuf/proto")
+	protoPkg   = protogen.GoImportPath("google.golang.org/protobuf/proto")
+	reflectPkg = protogen.GoImportPath("reflect")
+
+	nonAlphaNum = regexp.MustCompile(`[^a-zA-Z0-9_]`)
 )
 
 func init() {
@@ -28,6 +35,13 @@ func init() {
 type clone struct {
 	*generator.GeneratedFile
 	once bool
+
+	// prefix allows to introduce dynamically named symbols without clashing with declarations in other
+	// generated files.
+	prefix string
+	// cloneHelperFuncNames tracks the message types for which clone helper functions are required, along
+	// with the name by which they are referenced.
+	cloneHelperFuncNames map[*protogen.Message]string
 }
 
 var _ generator.FeatureGenerator = (*clone)(nil)
@@ -38,9 +52,13 @@ func (p *clone) Name() string {
 
 func (p *clone) GenerateFile(file *protogen.File) bool {
 	proto3 := file.Desc.Syntax() == protoreflect.Proto3
+	p.prefix = nonAlphaNum.ReplaceAllString(strings.TrimSuffix(path.Base(file.Desc.Path()), ".proto"), "_")
+
 	for _, message := range file.Messages {
-		p.message(proto3, message)
+		p.processMessage(proto3, message)
 	}
+
+	p.generateCloneHelperFuncs()
 
 	return p.once
 }
@@ -48,7 +66,8 @@ func (p *clone) GenerateFile(file *protogen.File) bool {
 func (p *clone) GenerateHelpers() {
 }
 
-func (p *clone) oneofFieldClone(lhsBase, rhsBase string, oneof *protogen.Oneof) {
+// cloneOneofField generates the statements for cloning a oneof field
+func (p *clone) cloneOneofField(lhsBase, rhsBase string, oneof *protogen.Oneof) {
 	fieldname := oneof.GoName
 	ccInterfaceName := "is" + oneof.GoIdent.GoName
 	lhs := lhsBase + "." + fieldname
@@ -58,17 +77,15 @@ func (p *clone) oneofFieldClone(lhsBase, rhsBase string, oneof *protogen.Oneof) 
 	p.P(`}`)
 }
 
-func (p *clone) fieldCloneSimple(lhs, rhs string, kind protoreflect.Kind, fieldGoType string, localMessage bool) {
+// cloneFieldSingular generates the code for cloning a singular, non-oneof field.
+func (p *clone) cloneFieldSingular(lhs, rhs string, kind protoreflect.Kind, message *protogen.Message) {
 	switch {
 	case kind == protoreflect.MessageKind, kind == protoreflect.GroupKind:
-		if localMessage {
+		if p.IsLocalMessage(message) {
 			p.P(lhs, ` = `, rhs, `.`, cloneName, `()`)
 		} else {
-			p.P(`if vtpb, ok := `, protoPkg.Ident("Message"), `(`, rhs, `).(interface{ `, cloneName, `() `, fieldGoType, ` }); ok {`)
-			p.P(lhs, ` = vtpb.`, cloneName, `()`)
-			p.P(`} else {`)
-			p.P(lhs, ` = `, protoPkg.Ident("Clone"), `(`, rhs, `).(`, fieldGoType, `)`)
-			p.P(`}`)
+			cloneHelper := p.lookupCloneHelper(message)
+			p.P(lhs, ` = `, cloneHelper, `(`, rhs, `)`)
 		}
 	case kind == protoreflect.BytesKind:
 		p.P(`tmpBytes := make([]byte, len(`, rhs, `))`)
@@ -81,11 +98,12 @@ func (p *clone) fieldCloneSimple(lhs, rhs string, kind protoreflect.Kind, fieldG
 	}
 }
 
-func (p *clone) fieldClone(lhsBase, rhsBase string, allFieldsNullable bool, field *protogen.Field) {
+// cloneField generates the code for cloning a field in a protobuf.
+func (p *clone) cloneField(lhsBase, rhsBase string, allFieldsNullable bool, field *protogen.Field) {
 	// At this point, if we encounter a non-synthetic oneof, we assume it to be the representative
 	// field for that oneof.
 	if field.Oneof != nil && !field.Oneof.Desc.IsSynthetic() {
-		p.oneofFieldClone(lhsBase, rhsBase, field.Oneof)
+		p.cloneOneofField(lhsBase, rhsBase, field.Oneof)
 		return
 	}
 
@@ -102,14 +120,11 @@ func (p *clone) fieldClone(lhsBase, rhsBase string, allFieldsNullable bool, fiel
 	p.P(`if rhs := `, rhs, `; rhs != nil {`)
 	rhs = "rhs"
 
-	goType, _ := p.FieldGoType(field)
 	fieldKind := field.Desc.Kind()
-	localMessage := false
-	if msg := field.Message; msg != nil {
-		localMessage = p.IsLocalMessage(msg)
-	}
+	msg := field.Message // possibly nil
 
 	if field.Desc.Cardinality() == protoreflect.Repeated { // maps and slices
+		goType, _ := p.FieldGoType(field)
 		p.P(`tmpContainer := make(`, goType, `, len(`, rhs, `))`)
 		if isScalar(fieldKind) && field.Desc.IsList() {
 			// Generated code optimization: instead of iterating over all (key/index, value) pairs,
@@ -117,18 +132,14 @@ func (p *clone) fieldClone(lhsBase, rhsBase string, allFieldsNullable bool, fiel
 			p.P(`copy(tmpContainer, `, rhs, `)`)
 		} else {
 			if field.Desc.IsMap() {
+				// For maps, the type of the value field determines what code is generated for cloning
+				// an entry.
 				valueField := field.Message.Fields[1]
 				fieldKind = valueField.Desc.Kind()
-				goType, _ = p.FieldGoType(valueField)
-				localMessage = false
-				if msg := field.Message.Fields[1].Message; msg != nil {
-					localMessage = p.IsLocalMessage(msg)
-				}
-			} else {
-				goType = goType[2:] // strip []
+				msg = valueField.Message
 			}
 			p.P(`for k, v := range `, rhs, ` {`)
-			p.fieldCloneSimple("tmpContainer[k]", "v", fieldKind, goType, localMessage)
+			p.cloneFieldSingular("tmpContainer[k]", "v", fieldKind, msg)
 			p.P(`}`)
 		}
 		p.P(lhs, ` = tmpContainer`)
@@ -136,19 +147,26 @@ func (p *clone) fieldClone(lhsBase, rhsBase string, allFieldsNullable bool, fiel
 		p.P(`tmpVal := *`, rhs)
 		p.P(lhs, ` = &tmpVal`)
 	} else {
-		p.fieldCloneSimple(lhs, rhs, fieldKind, goType, localMessage)
+		p.cloneFieldSingular(lhs, rhs, fieldKind, msg)
 	}
 	p.P(`}`)
 }
 
-func (p *clone) messageDeep(proto3 bool, message *protogen.Message) {
+func (p *clone) generateCloneMethodsForMessage(proto3 bool, message *protogen.Message) {
 	ccTypeName := message.GoIdent.GoName
 	p.P(`func (m *`, ccTypeName, `) `, cloneName, `() *`, ccTypeName, ` {`)
 	p.body(!proto3, ccTypeName, message.Fields)
 	p.P(`}`)
 	p.P()
+	p.P(`func (m *`, ccTypeName, `) `, cloneGenericName, `() `, protoPkg.Ident("Message"), ` {`)
+	p.P(`return m.`, cloneName, `()`)
+	p.P(`}`)
+	p.P()
 }
 
+// body generates the code for the actual cloning logic of a structure containing the given fields.
+// In practice, those can be the fields of a message, or of a oneof struct.
+// The object to be cloned is assumed to be called "m".
 func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protogen.Field) {
 	// The method body for a message or a oneof wrapper always starts with a nil check.
 	p.P(`if m == nil {`)
@@ -180,8 +198,13 @@ func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protog
 		}
 		// Shortcut: for types where we know that an optimized clone method exists, we can call it directly as it is
 		// nil-safe.
-		if field.Desc.Cardinality() != protoreflect.Repeated && field.Message != nil && p.IsLocalMessage(field.Message) {
-			p.P(field.GoName, `: m.`, field.GoName, `.`, cloneName, `(),`)
+		if field.Desc.Cardinality() != protoreflect.Repeated && field.Message != nil {
+			if p.IsLocalMessage(field.Message) {
+				p.P(field.GoName, `: m.`, field.GoName, `.`, cloneName, `(),`)
+			} else {
+				cloneHelper := p.lookupCloneHelper(field.Message)
+				p.P(field.GoName, `: `, cloneHelper, `(m.`, field.GoName, `),`)
+			}
 			continue
 		}
 		refFields = append(refFields, field)
@@ -190,13 +213,15 @@ func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protog
 
 	// Generate explicit assignment statements for all reference fields.
 	for _, field := range refFields {
-		p.fieldClone("r", "m", allFieldsNullable, field)
+		p.cloneField("r", "m", allFieldsNullable, field)
 	}
 
 	p.P(`return r`)
 }
 
-func (p *clone) oneofDeep(field *protogen.Field) {
+// generateCloneMethodsForOneof generates the clone method for the oneof wrapper type of a
+// field in a oneof.
+func (p *clone) generateCloneMethodsForOneof(field *protogen.Field) {
 	ccTypeName := field.GoIdent.GoName
 	ccInterfaceName := "is" + field.Oneof.GoIdent.GoName
 	p.P(`func (m *`, ccTypeName, `) `, cloneName, `() `, ccInterfaceName, ` {`)
@@ -210,18 +235,18 @@ func (p *clone) oneofDeep(field *protogen.Field) {
 	p.P()
 }
 
-func (p *clone) messageOneofs(message *protogen.Message) {
+func (p *clone) processMessageOneofs(message *protogen.Message) {
 	for _, field := range message.Fields {
 		if field.Oneof == nil || field.Oneof.Desc.IsSynthetic() {
 			continue
 		}
-		p.oneofDeep(field)
+		p.generateCloneMethodsForOneof(field)
 	}
 }
 
-func (p *clone) message(proto3 bool, message *protogen.Message) {
+func (p *clone) processMessage(proto3 bool, message *protogen.Message) {
 	for _, nested := range message.Messages {
-		p.message(proto3, nested)
+		p.processMessage(proto3, nested)
 	}
 
 	if message.Desc.IsMapEntry() {
@@ -230,10 +255,59 @@ func (p *clone) message(proto3 bool, message *protogen.Message) {
 
 	p.once = true
 
-	p.messageDeep(proto3, message)
-	p.messageOneofs(message)
+	p.generateCloneMethodsForMessage(proto3, message)
+	p.processMessageOneofs(message)
 }
 
+// lookupCloneHelper retrieves the name of the helper function to clone a message of the given type,
+// and tracks the type for later code generation in generateCloneHelperFuncs.
+func (p *clone) lookupCloneHelper(message *protogen.Message) string {
+	helperName := p.cloneHelperFuncNames[message]
+	if helperName == "" {
+		if p.cloneHelperFuncNames == nil {
+			p.cloneHelperFuncNames = make(map[*protogen.Message]string)
+		}
+		helperName = "vt_clone_helper__" + p.prefix + "__" + nonAlphaNum.ReplaceAllString(string(message.Desc.FullName()), "_")
+		p.cloneHelperFuncNames[message] = helperName
+	}
+	return helperName
+}
+
+// generateCloneHelperFuncs introduces function-typed variables for cloning non-local messages.
+// These variables either point to the CloneVT method, if one exists for the type, or a wrapper using
+// proto.Clone and a cast.
+func (p *clone) generateCloneHelperFuncs() {
+	if len(p.cloneHelperFuncNames) == 0 {
+		return
+	}
+	p.P(`var (`)
+	for msg, helperName := range p.cloneHelperFuncNames {
+		ccTypeName := p.QualifiedGoIdent(msg.GoIdent)
+		p.P(helperName, ` func(*`, ccTypeName, `) *`, ccTypeName)
+	}
+	p.P(`)`)
+	p.P()
+	p.P(`func init() {`)
+	for msg, helperName := range p.cloneHelperFuncNames {
+		ccTypeName := p.QualifiedGoIdent(msg.GoIdent)
+		// Use interface type assertions + reflection _once_ to retrieve the typed CloneVT func.
+		p.P(`if _, ok := `, protoPkg.Ident("Message"), `((*`, ccTypeName, `)(nil)).(interface{ `, cloneName, `() *`, ccTypeName, ` }); ok {`)
+		p.P(`m, _ := `, reflectPkg.Ident("TypeOf"), `((*`, ccTypeName, `)(nil)).MethodByName("`, cloneName, `")`)
+		p.P(helperName, ` = m.Func.Interface().(func(*`, ccTypeName, `) *`, ccTypeName, `)`)
+		p.P(`} else {`)
+		p.P(helperName, ` = func(m *`, ccTypeName, `) *`, ccTypeName, ` {`)
+		p.P(`if m == nil {`)
+		p.P(`return nil`)
+		p.P(`}`)
+		p.P(`return `, protoPkg.Ident("Clone"), `(m).(*`, ccTypeName, `)`)
+		p.P(`}`)
+		p.P(`}`)
+	}
+	p.P(`}`)
+	p.P()
+}
+
+// isReference checks whether the Go equivalent of the given field is of reference type, i.e., can be nil.
 func isReference(allFieldsNullable bool, field *protogen.Field) bool {
 	if allFieldsNullable || field.Oneof != nil || field.Message != nil || field.Desc.Cardinality() == protoreflect.Repeated || field.Desc.Kind() == protoreflect.BytesKind {
 		return true

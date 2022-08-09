@@ -7,6 +7,7 @@ package proto3opt
 import (
 	binary "encoding/binary"
 	fmt "fmt"
+	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	io "io"
 	math "math"
@@ -91,6 +92,10 @@ func (m *OptionalFieldInProto3) CloneVT() *OptionalFieldInProto3 {
 		r.OptionalEnum = &tmpVal
 	}
 	return r
+}
+
+func (m *OptionalFieldInProto3) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (this *OptionalFieldInProto3) EqualVT(that *OptionalFieldInProto3) bool {

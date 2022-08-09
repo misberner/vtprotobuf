@@ -6,6 +6,7 @@ package conformance
 
 import (
 	fmt "fmt"
+	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	io "io"
 )
@@ -30,6 +31,10 @@ func (m *FailureSet) CloneVT() *FailureSet {
 	return r
 }
 
+func (m *FailureSet) CloneGenericVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *ConformanceRequest) CloneVT() *ConformanceRequest {
 	if m == nil {
 		return (*ConformanceRequest)(nil)
@@ -47,6 +52,10 @@ func (m *ConformanceRequest) CloneVT() *ConformanceRequest {
 		}).CloneVT()
 	}
 	return r
+}
+
+func (m *ConformanceRequest) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *ConformanceRequest_ProtobufPayload) CloneVT() isConformanceRequest_Payload {
@@ -103,6 +112,10 @@ func (m *ConformanceResponse) CloneVT() *ConformanceResponse {
 		}).CloneVT()
 	}
 	return r
+}
+
+func (m *ConformanceResponse) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (m *ConformanceResponse_ParseError) CloneVT() isConformanceResponse_Result {
@@ -196,6 +209,10 @@ func (m *JspbEncodingConfig) CloneVT() *JspbEncodingConfig {
 		UseJspbArrayAnyFormat: m.UseJspbArrayAnyFormat,
 	}
 	return r
+}
+
+func (m *JspbEncodingConfig) CloneGenericVT() proto.Message {
+	return m.CloneVT()
 }
 
 func (this *FailureSet) EqualVT(that *FailureSet) bool {
