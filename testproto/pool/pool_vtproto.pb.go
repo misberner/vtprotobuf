@@ -19,6 +19,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+func (m *MemoryPoolExtension) CloneVT() *MemoryPoolExtension {
+	if m == nil {
+		return (*MemoryPoolExtension)(nil)
+	}
+	r := &MemoryPoolExtension{
+		Foo1: m.Foo1,
+		Foo2: m.Foo2,
+	}
+	return r
+}
+
 func (this *MemoryPoolExtension) EqualVT(that *MemoryPoolExtension) bool {
 	if this == nil {
 		return that == nil || that.String() == ""

@@ -18,6 +18,72 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+func (m *Test1) CloneVT() *Test1 {
+	if m == nil {
+		return (*Test1)(nil)
+	}
+	r := &Test1{}
+	if rhs := m.Sl; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.Sl = tmpContainer
+	}
+	return r
+}
+
+func (m *Test2) CloneVT() *Test2 {
+	if m == nil {
+		return (*Test2)(nil)
+	}
+	r := &Test2{}
+	if rhs := m.Sl; rhs != nil {
+		tmpContainer := make([]*Slice2, len(rhs))
+		for k, v := range rhs {
+			tmpContainer[k] = v.CloneVT()
+		}
+		r.Sl = tmpContainer
+	}
+	return r
+}
+
+func (m *Slice2) CloneVT() *Slice2 {
+	if m == nil {
+		return (*Slice2)(nil)
+	}
+	r := &Slice2{
+		D: m.D.CloneVT(),
+		E: m.E,
+		F: m.F,
+	}
+	if rhs := m.A; rhs != nil {
+		tmpContainer := make(map[int64]int64, len(rhs))
+		for k, v := range rhs {
+			tmpContainer[k] = v
+		}
+		r.A = tmpContainer
+	}
+	if rhs := m.B; rhs != nil {
+		tmpVal := *rhs
+		r.B = &tmpVal
+	}
+	if rhs := m.C; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.C = tmpContainer
+	}
+	return r
+}
+
+func (m *Element2) CloneVT() *Element2 {
+	if m == nil {
+		return (*Element2)(nil)
+	}
+	r := &Element2{
+		A: m.A,
+	}
+	return r
+}
+
 func (this *Test1) EqualVT(that *Test1) bool {
 	if this == nil {
 		return that == nil || that.String() == ""
