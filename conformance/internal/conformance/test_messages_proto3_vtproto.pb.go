@@ -763,25 +763,141 @@ func (m *EnumOnlyProto3) CloneGenericVT() proto.Message {
 }
 
 var (
-	vt_clone_helper__test_messages_proto3__google_protobuf_StringValue func(*wrapperspb.StringValue) *wrapperspb.StringValue
-	vt_clone_helper__test_messages_proto3__google_protobuf_UInt32Value func(*wrapperspb.UInt32Value) *wrapperspb.UInt32Value
-	vt_clone_helper__test_messages_proto3__google_protobuf_Struct      func(*structpb.Struct) *structpb.Struct
-	vt_clone_helper__test_messages_proto3__google_protobuf_Any         func(*anypb.Any) *anypb.Any
-	vt_clone_helper__test_messages_proto3__google_protobuf_Duration    func(*durationpb.Duration) *durationpb.Duration
-	vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value func(*wrapperspb.UInt64Value) *wrapperspb.UInt64Value
-	vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue func(*wrapperspb.DoubleValue) *wrapperspb.DoubleValue
-	vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue  func(*wrapperspb.BytesValue) *wrapperspb.BytesValue
-	vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask   func(*fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask
-	vt_clone_helper__test_messages_proto3__google_protobuf_Int32Value  func(*wrapperspb.Int32Value) *wrapperspb.Int32Value
 	vt_clone_helper__test_messages_proto3__google_protobuf_Int64Value  func(*wrapperspb.Int64Value) *wrapperspb.Int64Value
-	vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue  func(*wrapperspb.FloatValue) *wrapperspb.FloatValue
+	vt_clone_helper__test_messages_proto3__google_protobuf_StringValue func(*wrapperspb.StringValue) *wrapperspb.StringValue
 	vt_clone_helper__test_messages_proto3__google_protobuf_Timestamp   func(*timestamppb.Timestamp) *timestamppb.Timestamp
+	vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask   func(*fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask
+	vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue  func(*wrapperspb.FloatValue) *wrapperspb.FloatValue
+	vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue func(*wrapperspb.DoubleValue) *wrapperspb.DoubleValue
+	vt_clone_helper__test_messages_proto3__google_protobuf_Any         func(*anypb.Any) *anypb.Any
+	vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue   func(*wrapperspb.BoolValue) *wrapperspb.BoolValue
+	vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value func(*wrapperspb.UInt64Value) *wrapperspb.UInt64Value
+	vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue  func(*wrapperspb.BytesValue) *wrapperspb.BytesValue
+	vt_clone_helper__test_messages_proto3__google_protobuf_Duration    func(*durationpb.Duration) *durationpb.Duration
+	vt_clone_helper__test_messages_proto3__google_protobuf_Struct      func(*structpb.Struct) *structpb.Struct
+	vt_clone_helper__test_messages_proto3__google_protobuf_Int32Value  func(*wrapperspb.Int32Value) *wrapperspb.Int32Value
+	vt_clone_helper__test_messages_proto3__google_protobuf_UInt32Value func(*wrapperspb.UInt32Value) *wrapperspb.UInt32Value
 	vt_clone_helper__test_messages_proto3__google_protobuf_Value       func(*structpb.Value) *structpb.Value
 	vt_clone_helper__test_messages_proto3__google_protobuf_ListValue   func(*structpb.ListValue) *structpb.ListValue
-	vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue   func(*wrapperspb.BoolValue) *wrapperspb.BoolValue
 )
 
 func init() {
+	if _, ok := proto.Message((*wrapperspb.Int64Value)(nil)).(interface{ CloneVT() *wrapperspb.Int64Value }); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.Int64Value)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_Int64Value = m.Func.Interface().(func(*wrapperspb.Int64Value) *wrapperspb.Int64Value)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_Int64Value = func(m *wrapperspb.Int64Value) *wrapperspb.Int64Value {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.Int64Value)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.StringValue)(nil)).(interface {
+		CloneVT() *wrapperspb.StringValue
+	}); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.StringValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_StringValue = m.Func.Interface().(func(*wrapperspb.StringValue) *wrapperspb.StringValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_StringValue = func(m *wrapperspb.StringValue) *wrapperspb.StringValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.StringValue)
+		}
+	}
+	if _, ok := proto.Message((*timestamppb.Timestamp)(nil)).(interface{ CloneVT() *timestamppb.Timestamp }); ok {
+		m, _ := reflect.TypeOf((*timestamppb.Timestamp)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_Timestamp = m.Func.Interface().(func(*timestamppb.Timestamp) *timestamppb.Timestamp)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_Timestamp = func(m *timestamppb.Timestamp) *timestamppb.Timestamp {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*timestamppb.Timestamp)
+		}
+	}
+	if _, ok := proto.Message((*fieldmaskpb.FieldMask)(nil)).(interface{ CloneVT() *fieldmaskpb.FieldMask }); ok {
+		m, _ := reflect.TypeOf((*fieldmaskpb.FieldMask)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask = m.Func.Interface().(func(*fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask = func(m *fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*fieldmaskpb.FieldMask)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.FloatValue)(nil)).(interface{ CloneVT() *wrapperspb.FloatValue }); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.FloatValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue = m.Func.Interface().(func(*wrapperspb.FloatValue) *wrapperspb.FloatValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue = func(m *wrapperspb.FloatValue) *wrapperspb.FloatValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.FloatValue)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.DoubleValue)(nil)).(interface {
+		CloneVT() *wrapperspb.DoubleValue
+	}); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.DoubleValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue = m.Func.Interface().(func(*wrapperspb.DoubleValue) *wrapperspb.DoubleValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue = func(m *wrapperspb.DoubleValue) *wrapperspb.DoubleValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.DoubleValue)
+		}
+	}
+	if _, ok := proto.Message((*anypb.Any)(nil)).(interface{ CloneVT() *anypb.Any }); ok {
+		m, _ := reflect.TypeOf((*anypb.Any)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_Any = m.Func.Interface().(func(*anypb.Any) *anypb.Any)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_Any = func(m *anypb.Any) *anypb.Any {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*anypb.Any)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.BoolValue)(nil)).(interface{ CloneVT() *wrapperspb.BoolValue }); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.BoolValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue = m.Func.Interface().(func(*wrapperspb.BoolValue) *wrapperspb.BoolValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue = func(m *wrapperspb.BoolValue) *wrapperspb.BoolValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.BoolValue)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.UInt64Value)(nil)).(interface {
+		CloneVT() *wrapperspb.UInt64Value
+	}); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.UInt64Value)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value = m.Func.Interface().(func(*wrapperspb.UInt64Value) *wrapperspb.UInt64Value)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value = func(m *wrapperspb.UInt64Value) *wrapperspb.UInt64Value {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.UInt64Value)
+		}
+	}
+	if _, ok := proto.Message((*wrapperspb.BytesValue)(nil)).(interface{ CloneVT() *wrapperspb.BytesValue }); ok {
+		m, _ := reflect.TypeOf((*wrapperspb.BytesValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue = m.Func.Interface().(func(*wrapperspb.BytesValue) *wrapperspb.BytesValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue = func(m *wrapperspb.BytesValue) *wrapperspb.BytesValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*wrapperspb.BytesValue)
+		}
+	}
 	if _, ok := proto.Message((*durationpb.Duration)(nil)).(interface{ CloneVT() *durationpb.Duration }); ok {
 		m, _ := reflect.TypeOf((*durationpb.Duration)(nil)).MethodByName("CloneVT")
 		vt_clone_helper__test_messages_proto3__google_protobuf_Duration = m.Func.Interface().(func(*durationpb.Duration) *durationpb.Duration)
@@ -804,17 +920,6 @@ func init() {
 			return proto.Clone(m).(*structpb.Struct)
 		}
 	}
-	if _, ok := proto.Message((*anypb.Any)(nil)).(interface{ CloneVT() *anypb.Any }); ok {
-		m, _ := reflect.TypeOf((*anypb.Any)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_Any = m.Func.Interface().(func(*anypb.Any) *anypb.Any)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_Any = func(m *anypb.Any) *anypb.Any {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*anypb.Any)
-		}
-	}
 	if _, ok := proto.Message((*wrapperspb.Int32Value)(nil)).(interface{ CloneVT() *wrapperspb.Int32Value }); ok {
 		m, _ := reflect.TypeOf((*wrapperspb.Int32Value)(nil)).MethodByName("CloneVT")
 		vt_clone_helper__test_messages_proto3__google_protobuf_Int32Value = m.Func.Interface().(func(*wrapperspb.Int32Value) *wrapperspb.Int32Value)
@@ -824,120 +929,6 @@ func init() {
 				return nil
 			}
 			return proto.Clone(m).(*wrapperspb.Int32Value)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.UInt64Value)(nil)).(interface {
-		CloneVT() *wrapperspb.UInt64Value
-	}); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.UInt64Value)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value = m.Func.Interface().(func(*wrapperspb.UInt64Value) *wrapperspb.UInt64Value)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_UInt64Value = func(m *wrapperspb.UInt64Value) *wrapperspb.UInt64Value {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.UInt64Value)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.DoubleValue)(nil)).(interface {
-		CloneVT() *wrapperspb.DoubleValue
-	}); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.DoubleValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue = m.Func.Interface().(func(*wrapperspb.DoubleValue) *wrapperspb.DoubleValue)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_DoubleValue = func(m *wrapperspb.DoubleValue) *wrapperspb.DoubleValue {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.DoubleValue)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.BytesValue)(nil)).(interface{ CloneVT() *wrapperspb.BytesValue }); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.BytesValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue = m.Func.Interface().(func(*wrapperspb.BytesValue) *wrapperspb.BytesValue)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_BytesValue = func(m *wrapperspb.BytesValue) *wrapperspb.BytesValue {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.BytesValue)
-		}
-	}
-	if _, ok := proto.Message((*fieldmaskpb.FieldMask)(nil)).(interface{ CloneVT() *fieldmaskpb.FieldMask }); ok {
-		m, _ := reflect.TypeOf((*fieldmaskpb.FieldMask)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask = m.Func.Interface().(func(*fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_FieldMask = func(m *fieldmaskpb.FieldMask) *fieldmaskpb.FieldMask {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*fieldmaskpb.FieldMask)
-		}
-	}
-	if _, ok := proto.Message((*structpb.ListValue)(nil)).(interface{ CloneVT() *structpb.ListValue }); ok {
-		m, _ := reflect.TypeOf((*structpb.ListValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_ListValue = m.Func.Interface().(func(*structpb.ListValue) *structpb.ListValue)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_ListValue = func(m *structpb.ListValue) *structpb.ListValue {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*structpb.ListValue)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.BoolValue)(nil)).(interface{ CloneVT() *wrapperspb.BoolValue }); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.BoolValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue = m.Func.Interface().(func(*wrapperspb.BoolValue) *wrapperspb.BoolValue)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_BoolValue = func(m *wrapperspb.BoolValue) *wrapperspb.BoolValue {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.BoolValue)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.Int64Value)(nil)).(interface{ CloneVT() *wrapperspb.Int64Value }); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.Int64Value)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_Int64Value = m.Func.Interface().(func(*wrapperspb.Int64Value) *wrapperspb.Int64Value)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_Int64Value = func(m *wrapperspb.Int64Value) *wrapperspb.Int64Value {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.Int64Value)
-		}
-	}
-	if _, ok := proto.Message((*wrapperspb.FloatValue)(nil)).(interface{ CloneVT() *wrapperspb.FloatValue }); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.FloatValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue = m.Func.Interface().(func(*wrapperspb.FloatValue) *wrapperspb.FloatValue)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_FloatValue = func(m *wrapperspb.FloatValue) *wrapperspb.FloatValue {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*wrapperspb.FloatValue)
-		}
-	}
-	if _, ok := proto.Message((*timestamppb.Timestamp)(nil)).(interface{ CloneVT() *timestamppb.Timestamp }); ok {
-		m, _ := reflect.TypeOf((*timestamppb.Timestamp)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_Timestamp = m.Func.Interface().(func(*timestamppb.Timestamp) *timestamppb.Timestamp)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_Timestamp = func(m *timestamppb.Timestamp) *timestamppb.Timestamp {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*timestamppb.Timestamp)
-		}
-	}
-	if _, ok := proto.Message((*structpb.Value)(nil)).(interface{ CloneVT() *structpb.Value }); ok {
-		m, _ := reflect.TypeOf((*structpb.Value)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_Value = m.Func.Interface().(func(*structpb.Value) *structpb.Value)
-	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_Value = func(m *structpb.Value) *structpb.Value {
-			if m == nil {
-				return nil
-			}
-			return proto.Clone(m).(*structpb.Value)
 		}
 	}
 	if _, ok := proto.Message((*wrapperspb.UInt32Value)(nil)).(interface {
@@ -953,17 +944,26 @@ func init() {
 			return proto.Clone(m).(*wrapperspb.UInt32Value)
 		}
 	}
-	if _, ok := proto.Message((*wrapperspb.StringValue)(nil)).(interface {
-		CloneVT() *wrapperspb.StringValue
-	}); ok {
-		m, _ := reflect.TypeOf((*wrapperspb.StringValue)(nil)).MethodByName("CloneVT")
-		vt_clone_helper__test_messages_proto3__google_protobuf_StringValue = m.Func.Interface().(func(*wrapperspb.StringValue) *wrapperspb.StringValue)
+	if _, ok := proto.Message((*structpb.Value)(nil)).(interface{ CloneVT() *structpb.Value }); ok {
+		m, _ := reflect.TypeOf((*structpb.Value)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_Value = m.Func.Interface().(func(*structpb.Value) *structpb.Value)
 	} else {
-		vt_clone_helper__test_messages_proto3__google_protobuf_StringValue = func(m *wrapperspb.StringValue) *wrapperspb.StringValue {
+		vt_clone_helper__test_messages_proto3__google_protobuf_Value = func(m *structpb.Value) *structpb.Value {
 			if m == nil {
 				return nil
 			}
-			return proto.Clone(m).(*wrapperspb.StringValue)
+			return proto.Clone(m).(*structpb.Value)
+		}
+	}
+	if _, ok := proto.Message((*structpb.ListValue)(nil)).(interface{ CloneVT() *structpb.ListValue }); ok {
+		m, _ := reflect.TypeOf((*structpb.ListValue)(nil)).MethodByName("CloneVT")
+		vt_clone_helper__test_messages_proto3__google_protobuf_ListValue = m.Func.Interface().(func(*structpb.ListValue) *structpb.ListValue)
+	} else {
+		vt_clone_helper__test_messages_proto3__google_protobuf_ListValue = func(m *structpb.ListValue) *structpb.ListValue {
+			if m == nil {
+				return nil
+			}
+			return proto.Clone(m).(*structpb.ListValue)
 		}
 	}
 }
