@@ -20,6 +20,79 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+func (m *OptionalFieldInProto3) CloneVT() *OptionalFieldInProto3 {
+	if m == nil {
+		return (*OptionalFieldInProto3)(nil)
+	}
+	r := &OptionalFieldInProto3{}
+	if rhs := m.OptionalInt32; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalInt32 = &tmpVal
+	}
+	if rhs := m.OptionalInt64; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalInt64 = &tmpVal
+	}
+	if rhs := m.OptionalUint32; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalUint32 = &tmpVal
+	}
+	if rhs := m.OptionalUint64; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalUint64 = &tmpVal
+	}
+	if rhs := m.OptionalSint32; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalSint32 = &tmpVal
+	}
+	if rhs := m.OptionalSint64; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalSint64 = &tmpVal
+	}
+	if rhs := m.OptionalFixed32; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalFixed32 = &tmpVal
+	}
+	if rhs := m.OptionalFixed64; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalFixed64 = &tmpVal
+	}
+	if rhs := m.OptionalSfixed32; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalSfixed32 = &tmpVal
+	}
+	if rhs := m.OptionalSfixed64; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalSfixed64 = &tmpVal
+	}
+	if rhs := m.OptionalFloat; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalFloat = &tmpVal
+	}
+	if rhs := m.OptionalDouble; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalDouble = &tmpVal
+	}
+	if rhs := m.OptionalBool; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalBool = &tmpVal
+	}
+	if rhs := m.OptionalString; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalString = &tmpVal
+	}
+	if rhs := m.OptionalBytes; rhs != nil {
+		tmpBytes := make([]byte, len(rhs))
+		copy(tmpBytes, rhs)
+		r.OptionalBytes = tmpBytes
+	}
+	if rhs := m.OptionalEnum; rhs != nil {
+		tmpVal := *rhs
+		r.OptionalEnum = &tmpVal
+	}
+	return r
+}
+
 func (this *OptionalFieldInProto3) EqualVT(that *OptionalFieldInProto3) bool {
 	if this == nil {
 		return that == nil || that.String() == ""
