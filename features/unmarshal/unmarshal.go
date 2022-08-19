@@ -128,10 +128,8 @@ func (p *unmarshal) GenerateHelpers() {
 }
 
 func (p *unmarshal) decodeMessage(varName, buf string, message *protogen.Message) {
-	local := p.IsLocalMessage(message)
-
-	if local {
-		p.P(`if err := `, varName, `.UnmarshalVT(`, buf, `); err != nil {`)
+	if expr := p.FastCallExpr(`UnmarshalVT`, varName, message.GoIdent, buf); expr != nil {
+		p.P(`if err := `, expr, `; err != nil {`)
 		p.P(`return err`)
 		p.P(`}`)
 	} else {
@@ -819,13 +817,15 @@ func (p *unmarshal) message(proto3 bool, message *protogen.Message) {
 	}
 
 	p.once = true
-	ccTypeName := message.GoIdent
+
 	required := message.Desc.RequiredNumbers()
 
-	p.P(`func (m *`, ccTypeName, `) UnmarshalVT(dAtA []byte) error {`)
+	p.FuncHeader(`UnmarshalVT`, `m`, message.GoIdent, `dAtA []byte`, `error`)
 	if required.Len() > 0 {
 		p.P(`var hasFields [`, strconv.Itoa(1+(required.Len()-1)/64), `]uint64`)
 	}
+	p.P(`unknownFields := `, p.GetUnknownFieldsExpr(`m`))
+	p.P(`unknownFieldsPreLen := len(unknownFields)`)
 	p.P(`l := len(dAtA)`)
 	p.P(`iNdEx := 0`)
 	p.P(`for iNdEx < l {`)
@@ -871,12 +871,16 @@ func (p *unmarshal) message(proto3 bool, message *protogen.Message) {
 		p.P(`iNdEx += skippy`)
 		p.P(`} else {`)
 	}
-	p.P(`m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)`)
+	p.P(`unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)`)
 	p.P(`iNdEx += skippy`)
 	if message.Desc.ExtensionRanges().Len() > 0 {
 		p.P(`}`)
 	}
 	p.P(`}`)
+	p.P(`}`)
+
+	p.P(`if len(unknownFields) > unknownFieldsPreLen {`)
+	p.SetUnknownFieldsStmt(`m`, `unknownFields`)
 	p.P(`}`)
 
 	for _, field := range message.Fields {

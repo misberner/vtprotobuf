@@ -48,8 +48,7 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 
 	p.once = true
 
-	ccTypeName := message.GoIdent
-	p.P(`func (this *`, ccTypeName, `) `, equalName, `(that *`, ccTypeName, `) bool {`)
+	p.FuncHeader(equalName, "this", message.GoIdent, p.X(`that *`, message.GoIdent), `bool`)
 
 	p.P(`if this == nil {`)
 	p.P(`	return that == nil`)
@@ -81,10 +80,21 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 			p.P(`	if that.`, fieldname, ` == nil {`)
 			p.P(`		return false`)
 			p.P(`	}`)
-			ccInterfaceName := fmt.Sprintf("is%s", field.Oneof.GoIdent.GoName)
-			p.P(`if !this.`, fieldname, `.(interface{ `, equalName, `(`, ccInterfaceName, `) bool }).`, equalName, `(that.`, fieldname, `) {`)
-			p.P(`return false`)
-			p.P(`}`)
+			if false {
+				ccInterfaceName := p.InterfaceForOneof(field.Oneof)
+				p.P(`if !this.`, fieldname, `.(interface{ `, equalName, `(`, ccInterfaceName, `) bool }).`, equalName, `(that.`, fieldname, `) {`)
+				p.P(`return false`)
+				p.P(`}`)
+			} else {
+				p.P(`switch f := this.`, fieldname, `.(type) {`)
+				for _, field := range field.Oneof.Fields {
+					p.P(`case *`, field.GoIdent, `:`)
+					p.P(`if !`, p.FastCallExpr(equalName, "f", field.GoIdent, `that.`, fieldname), ` {`)
+					p.P(`return false`)
+					p.P(`}`)
+				}
+				p.P(`}`)
+			}
 			p.P(`}`)
 		}
 	}
@@ -97,9 +107,8 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 		}
 	}
 
-	p.P(`return string(this.unknownFields) == string(that.unknownFields)`)
+	p.P(`return string(`, p.GetUnknownFieldsExpr(`this`), ` == string(`, p.GetUnknownFieldsExpr(`that`), `)`)
 	p.P(`}`)
-	p.P()
 
 	for _, field := range message.Fields {
 		oneof := field.Oneof != nil && !field.Oneof.Desc.IsSynthetic()
@@ -112,10 +121,10 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 
 func (p *equal) oneof(field *protogen.Field) {
 	ccTypeName := field.GoIdent.GoName
-	ccInterfaceName := fmt.Sprintf("is%s", field.Oneof.GoIdent.GoName)
+	ccInterfaceName := p.InterfaceForOneof(field.Oneof)
 	fieldname := field.GoName
 
-	p.P(`func (this *`, ccTypeName, `) `, equalName, `(thatIface `, ccInterfaceName, `) bool {`)
+	p.FuncHeader(equalName, `this`, field.GoIdent, p.X(`thatIface `, ccInterfaceName), `bool`)
 	p.P(`that, ok := thatIface.(*`, ccTypeName, `)`)
 	p.P(`if !ok {`)
 	p.P(`return false`)
@@ -229,8 +238,8 @@ func (p *equal) compareCall(lhs, rhs string, msg *protogen.Message, nullable boo
 		p.P(`}`)
 		lhs, rhs = "p", "q"
 	}
-	if msg != nil && msg.Desc != nil && msg.Desc.ParentFile() != nil && p.IsLocalMessage(msg) {
-		p.P(`if !`, lhs, `.`, equalName, `(`, rhs, `) {`)
+	if expr := p.FastCallExpr(equalName, lhs, msg.GoIdent, rhs); expr != nil {
+		p.P(`if !`, expr, ` {`)
 		p.P(`	return false`)
 		p.P(`}`)
 		return

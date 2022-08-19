@@ -6,6 +6,7 @@ package generator
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/planetscale/vtprotobuf/vtproto"
 
@@ -14,10 +15,13 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+type Expr []interface{}
+
 type GeneratedFile struct {
 	*protogen.GeneratedFile
-	Ext           *Extensions
-	LocalPackages map[string]bool
+	Ext             *Extensions
+	LocalPackages   map[string]bool
+	LocalGoPackages map[protogen.GoImportPath]struct{}
 }
 
 func (p *GeneratedFile) Ident(path, ident string) string {
@@ -92,4 +96,83 @@ func (p *GeneratedFile) FieldGoType(field *protogen.Field) (goType string, point
 func (p *GeneratedFile) IsLocalMessage(message *protogen.Message) bool {
 	pkg := string(message.Desc.ParentFile().Package())
 	return p.LocalPackages[pkg]
+}
+
+func (p *GeneratedFile) IsLocalIdent(ident protogen.GoIdent) bool {
+	_, ok := p.LocalGoPackages[ident.GoImportPath]
+	return ok
+}
+
+func flattenInto(out, in []interface{}) []interface{} {
+	for _, elem := range in {
+		switch t := elem.(type) {
+		case nil:
+			continue
+		case []interface{}:
+			out = flattenInto(out, t)
+		default:
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
+func (p *GeneratedFile) P(args ...interface{}) {
+	p.GeneratedFile.P(flattenInto(nil, args)...)
+}
+
+func (p *GeneratedFile) GetSupportPkgFor(ty protogen.GoIdent) protogen.GoImportPath {
+	if strings.HasPrefix(ty.GoImportPath.String(), "google.golang.org/protobuf/types/") {
+		return `github.com/planetscale/vtprotobuf/support/types/` + ty.GoImportPath
+	}
+	return ""
+}
+
+func (p *GeneratedFile) FastCallExpr(methodName, varName string, varTy protogen.GoIdent, args ...interface{}) Expr {
+	if p.IsLocalIdent(varTy) {
+		return Expr{varName, `.`, methodName, `(`, Expr(args), `)`}
+	}
+	if supportPkg := p.GetSupportPkgFor(varTy); supportPkg != "" {
+		return Expr{supportPkg.Ident(methodName + "_" + varTy.GoName), `(`, varName, `, `, Expr(args), `)`}
+	}
+	return nil
+}
+
+func (p *GeneratedFile) FuncHeader(name string, receiver string, receiverType protogen.GoIdent, params, returns interface{}) {
+	receiverQType := p.QualifiedGoIdent(receiverType)
+	if receiverQType == receiverType.GoName {
+		p.P(`func (`, receiver, ` *`, receiverQType, `) `, name, `(`, params, `) (`, returns, `) {`)
+	} else {
+		p.P(`func `, name, `_`, receiverType.GoName, `(`, receiver, ` *`, receiverQType, `, `, params, `) (`, returns, `) {`)
+	}
+}
+
+func (p *GeneratedFile) GetUnknownFieldsExpr(x string) string {
+	if false {
+		return fmt.Sprintf("%s.unknownFields", x)
+	}
+	return fmt.Sprintf("%s.ProtoReflect().GetUnknown()", x)
+}
+
+func (p *GeneratedFile) SetUnknownFieldsStmt(x string, rhsExpr ...interface{}) {
+	if !p.IsExternal() {
+		p.P(x, `.unknownFields = `, rhsExpr)
+	} else {
+		p.P(x, `.ProtoReflect().SetUnknown(`, rhsExpr, `)`)
+	}
+}
+
+func (p *GeneratedFile) X(args ...interface{}) []interface{} {
+	return args
+}
+
+func (p *GeneratedFile) IsExternal() bool {
+	return false
+}
+
+func (p *GeneratedFile) InterfaceForOneof(oneof *protogen.Oneof) string {
+	if p.IsExternal() {
+		return "interface{}"
+	}
+	return fmt.Sprintf("is%s", oneof.GoIdent.GoName)
 }

@@ -25,6 +25,9 @@ type grpc struct {
 }
 
 func (g *grpc) GenerateFile(file *protogen.File) bool {
+	if g.IsExternal() {
+		return false
+	}
 	if len(file.Services) == 0 {
 		return false
 	}

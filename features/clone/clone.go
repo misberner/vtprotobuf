@@ -53,11 +53,20 @@ func (p *clone) GenerateHelpers() {
 // cloneOneofField generates the statements for cloning a oneof field
 func (p *clone) cloneOneofField(lhsBase, rhsBase string, oneof *protogen.Oneof) {
 	fieldname := oneof.GoName
-	ccInterfaceName := "is" + oneof.GoIdent.GoName
+	ccInterfaceName := p.InterfaceForOneof(oneof)
 	lhs := lhsBase + "." + fieldname
 	rhs := rhsBase + "." + fieldname
 	p.P(`if `, rhs, ` != nil {`)
-	p.P(lhs, ` = `, rhs, `.(interface{ `, cloneName, `() `, ccInterfaceName, ` }).`, cloneName, `()`)
+	if !p.IsExternal() {
+		p.P(lhs, ` = `, rhs, `.(interface{ `, cloneName, `() `, ccInterfaceName, ` }).`, cloneName, `()`)
+	} else {
+		p.P(`switch t := `, rhs, `.(type) {`)
+		for _, f := range oneof.Fields {
+			p.P(`case *`, f.GoIdent, `:`)
+			p.P(lhs, ` = `, p.FastCallExpr(cloneName, "t", f.GoIdent))
+		}
+		p.P(`}`)
+	}
 	p.P(`}`)
 }
 
@@ -65,8 +74,8 @@ func (p *clone) cloneOneofField(lhsBase, rhsBase string, oneof *protogen.Oneof) 
 func (p *clone) cloneFieldSingular(lhs, rhs string, kind protoreflect.Kind, message *protogen.Message) {
 	switch {
 	case kind == protoreflect.MessageKind, kind == protoreflect.GroupKind:
-		if p.IsLocalMessage(message) {
-			p.P(lhs, ` = `, rhs, `.`, cloneName, `()`)
+		if expr := p.FastCallExpr(cloneName, rhs, message.GoIdent); expr != nil {
+			p.P(lhs, ` = `, expr)
 		} else {
 			// rhs is a concrete type, we need to first convert it to an interface in order to use an interface
 			// type assertion.
@@ -142,12 +151,16 @@ func (p *clone) cloneField(lhsBase, rhsBase string, allFieldsNullable bool, fiel
 }
 
 func (p *clone) generateCloneMethodsForMessage(proto3 bool, message *protogen.Message) {
-	ccTypeName := message.GoIdent.GoName
-	p.P(`func (m *`, ccTypeName, `) `, cloneName, `() *`, ccTypeName, ` {`)
-	p.body(!proto3, ccTypeName, message.Fields, true)
+	p.FuncHeader(cloneName, "m", message.GoIdent, p.X(), p.X(`*`, message.GoIdent))
+	p.body(!proto3, message.GoIdent, message.Fields, true)
 	p.P(`}`)
 	p.P()
-	p.P(`func (m *`, ccTypeName, `) `, cloneGenericName, `() `, protoPkg.Ident("Message"), ` {`)
+	if p.IsExternal() {
+		// CloneGenericVT is intended to be used in interface type assertions and therefore does not make
+		// sense to be generated as a non-method.
+		return
+	}
+	p.P(`func (m *`, message.GoIdent, `) `, cloneGenericName, `() `, protoPkg.Ident("Message"), ` {`)
 	p.P(`return m.`, cloneName, `()`)
 	p.P(`}`)
 	p.P()
@@ -156,17 +169,17 @@ func (p *clone) generateCloneMethodsForMessage(proto3 bool, message *protogen.Me
 // body generates the code for the actual cloning logic of a structure containing the given fields.
 // In practice, those can be the fields of a message, or of a oneof struct.
 // The object to be cloned is assumed to be called "m".
-func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protogen.Field, cloneUnknownFields bool) {
+func (p *clone) body(allFieldsNullable bool, typeName protogen.GoIdent, fields []*protogen.Field, cloneUnknownFields bool) {
 	// The method body for a message or a oneof wrapper always starts with a nil check.
 	p.P(`if m == nil {`)
 	// We use an explicitly typed nil to avoid returning the nil interface in the oneof wrapper
 	// case.
-	p.P(`return (*`, ccTypeName, `)(nil)`)
+	p.P(`return (*`, typeName, `)(nil)`)
 	p.P(`}`)
 
 	// Make a first pass over the fields, in which we initialize all non-reference fields via direct
 	// struct literal initialization, and extract all other (refernece) fields for a second pass.
-	p.P(`r := &`, ccTypeName, `{`)
+	p.P(`r := &`, typeName, `{`)
 	var refFields []*protogen.Field
 	oneofFields := make(map[string]struct{}, len(fields))
 
@@ -202,9 +215,10 @@ func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protog
 
 	if cloneUnknownFields {
 		// Clone unknown fields, if any
-		p.P(`if len(m.unknownFields) > 0 {`)
-		p.P(`r.unknownFields = make([]byte, len(m.unknownFields))`)
-		p.P(`copy(r.unknownFields, m.unknownFields)`)
+		p.P(`if uf := `, p.GetUnknownFieldsExpr("m"), `; len(uf) > 0 {`)
+		p.P(`ufc := make([]byte, len(uf))`)
+		p.P(`copy(ufc, uf)`)
+		p.SetUnknownFieldsStmt(`r`, `ufc`)
 		p.P(`}`)
 	}
 
@@ -214,15 +228,20 @@ func (p *clone) body(allFieldsNullable bool, ccTypeName string, fields []*protog
 // generateCloneMethodsForOneof generates the clone method for the oneof wrapper type of a
 // field in a oneof.
 func (p *clone) generateCloneMethodsForOneof(field *protogen.Field) {
-	ccTypeName := field.GoIdent.GoName
-	ccInterfaceName := "is" + field.Oneof.GoIdent.GoName
-	p.P(`func (m *`, ccTypeName, `) `, cloneName, `() `, ccInterfaceName, ` {`)
+	ccInterfaceName := p.InterfaceForOneof(field.Oneof)
+	var retTy interface{}
+	if !p.IsExternal() {
+		retTy = ccInterfaceName
+	} else {
+		retTy = p.X(`*`, field.GoIdent)
+	}
+	p.FuncHeader(cloneName, `m`, field.GoIdent, p.X(), retTy)
 
 	// Create a "fake" field for the single oneof member, pretending it is not a oneof field.
 	fieldInOneof := *field
 	fieldInOneof.Oneof = nil
 	// If we have a scalar field in a oneof, that field is never nullable, even when using proto2
-	p.body(false, ccTypeName, []*protogen.Field{&fieldInOneof}, false)
+	p.body(false, field.GoIdent, []*protogen.Field{&fieldInOneof}, false)
 	p.P(`}`)
 	p.P()
 }

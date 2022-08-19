@@ -306,7 +306,11 @@ func (p *size) message(proto3 bool, message *protogen.Message) {
 			}
 		}
 	}
-	p.P(`n+=len(m.unknownFields)`)
+	if false {
+		p.P(`n+=len(m.unknownFields)`)
+	} else {
+		p.P(`n+=len(m.ProtoReflect().GetUnknown())`)
+	}
 	p.P(`return n`)
 	p.P(`}`)
 	p.P()
