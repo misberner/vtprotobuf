@@ -32,9 +32,10 @@ func (m *TestAllTypesProto2_NestedMessage) CloneVT() *TestAllTypesProto2_NestedM
 		tmpVal := *rhs
 		r.A = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -56,9 +57,10 @@ func (m *TestAllTypesProto2_Data) CloneVT() *TestAllTypesProto2_Data {
 		tmpVal := *rhs
 		r.GroupUint32 = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -72,9 +74,10 @@ func (m *TestAllTypesProto2_MessageSetCorrect) CloneVT() *TestAllTypesProto2_Mes
 		return (*TestAllTypesProto2_MessageSetCorrect)(nil)
 	}
 	r := &TestAllTypesProto2_MessageSetCorrect{}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -92,9 +95,10 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) CloneVT() *TestAllTypes
 		tmpVal := *rhs
 		r.Str = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -112,9 +116,10 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) CloneVT() *TestAllTypes
 		tmpVal := *rhs
 		r.I = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -736,9 +741,10 @@ func (m *TestAllTypesProto2) CloneVT() *TestAllTypesProto2 {
 		tmpVal := *rhs
 		r.FieldName18__ = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -849,9 +855,10 @@ func (m *ForeignMessageProto2) CloneVT() *ForeignMessageProto2 {
 		tmpVal := *rhs
 		r.C = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -869,9 +876,10 @@ func (m *UnknownToTestAllTypes_OptionalGroup) CloneVT() *UnknownToTestAllTypes_O
 		tmpVal := *rhs
 		r.A = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -905,9 +913,10 @@ func (m *UnknownToTestAllTypes) CloneVT() *UnknownToTestAllTypes {
 		copy(tmpContainer, rhs)
 		r.RepeatedInt32 = tmpContainer
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -921,9 +930,10 @@ func (m *NullHypothesisProto2) CloneVT() *NullHypothesisProto2 {
 		return (*NullHypothesisProto2)(nil)
 	}
 	r := &NullHypothesisProto2{}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -937,9 +947,10 @@ func (m *EnumOnlyProto2) CloneVT() *EnumOnlyProto2 {
 		return (*EnumOnlyProto2)(nil)
 	}
 	r := &EnumOnlyProto2{}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -957,9 +968,10 @@ func (m *OneStringProto2) CloneVT() *OneStringProto2 {
 		tmpVal := *rhs
 		r.Data = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -980,9 +992,8 @@ func (this *TestAllTypesProto2_NestedMessage) EqualVT(that *TestAllTypesProto2_N
 	if !this.Corecursive.EqualVT(that.Corecursive) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2_Data) EqualVT(that *TestAllTypesProto2_Data) bool {
 	if this == nil {
 		return that == nil
@@ -995,18 +1006,16 @@ func (this *TestAllTypesProto2_Data) EqualVT(that *TestAllTypesProto2_Data) bool
 	if p, q := this.GroupUint32, that.GroupUint32; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2_MessageSetCorrect) EqualVT(that *TestAllTypesProto2_MessageSetCorrect) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2_MessageSetCorrectExtension1) EqualVT(that *TestAllTypesProto2_MessageSetCorrectExtension1) bool {
 	if this == nil {
 		return that == nil
@@ -1016,9 +1025,8 @@ func (this *TestAllTypesProto2_MessageSetCorrectExtension1) EqualVT(that *TestAl
 	if p, q := this.Str, that.Str; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2_MessageSetCorrectExtension2) EqualVT(that *TestAllTypesProto2_MessageSetCorrectExtension2) bool {
 	if this == nil {
 		return that == nil
@@ -1028,9 +1036,8 @@ func (this *TestAllTypesProto2_MessageSetCorrectExtension2) EqualVT(that *TestAl
 	if p, q := this.I, that.I; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2) EqualVT(that *TestAllTypesProto2) bool {
 	if this == nil {
 		return that == nil
@@ -1043,10 +1050,43 @@ func (this *TestAllTypesProto2) EqualVT(that *TestAllTypesProto2) bool {
 		if that.OneofField == nil {
 			return false
 		}
-		if !this.OneofField.(interface {
-			EqualVT(isTestAllTypesProto2_OneofField) bool
-		}).EqualVT(that.OneofField) {
-			return false
+		switch f := this.OneofField.(type) {
+		case *TestAllTypesProto2_OneofUint32:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofNestedMessage:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofString:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofBytes:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofBool:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofUint64:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofFloat:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofDouble:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
+		case *TestAllTypesProto2_OneofEnum:
+			if !f.EqualVT(that.OneofField) {
+				return false
+			}
 		}
 	}
 	if p, q := this.OptionalInt32, that.OptionalInt32; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1918,9 +1958,8 @@ func (this *TestAllTypesProto2) EqualVT(that *TestAllTypesProto2) bool {
 	if p, q := this.FieldName18__, that.FieldName18__; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *TestAllTypesProto2_OneofUint32) EqualVT(thatIface isTestAllTypesProto2_OneofField) bool {
 	that, ok := thatIface.(*TestAllTypesProto2_OneofUint32)
 	if !ok {
@@ -2091,9 +2130,8 @@ func (this *ForeignMessageProto2) EqualVT(that *ForeignMessageProto2) bool {
 	if p, q := this.C, that.C; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *UnknownToTestAllTypes_OptionalGroup) EqualVT(that *UnknownToTestAllTypes_OptionalGroup) bool {
 	if this == nil {
 		return that == nil
@@ -2103,9 +2141,8 @@ func (this *UnknownToTestAllTypes_OptionalGroup) EqualVT(that *UnknownToTestAllT
 	if p, q := this.A, that.A; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *UnknownToTestAllTypes) EqualVT(that *UnknownToTestAllTypes) bool {
 	if this == nil {
 		return that == nil
@@ -2136,27 +2173,24 @@ func (this *UnknownToTestAllTypes) EqualVT(that *UnknownToTestAllTypes) bool {
 			return false
 		}
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *NullHypothesisProto2) EqualVT(that *NullHypothesisProto2) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *EnumOnlyProto2) EqualVT(that *EnumOnlyProto2) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *OneStringProto2) EqualVT(that *OneStringProto2) bool {
 	if this == nil {
 		return that == nil
@@ -2166,9 +2200,8 @@ func (this *OneStringProto2) EqualVT(that *OneStringProto2) bool {
 	if p, q := this.Data, that.Data; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (m *TestAllTypesProto2_NestedMessage) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -2195,9 +2228,9 @@ func (m *TestAllTypesProto2_NestedMessage) MarshalToSizedBufferVT(dAtA []byte) (
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.Corecursive != nil {
 		size, err := m.Corecursive.MarshalToSizedBufferVT(dAtA[:i])
@@ -2243,9 +2276,9 @@ func (m *TestAllTypesProto2_Data) MarshalToSizedBufferVT(dAtA []byte) (int, erro
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.GroupUint32 != nil {
 		i = encodeVarint(dAtA, i, uint64(*m.GroupUint32))
@@ -2290,9 +2323,9 @@ func (m *TestAllTypesProto2_MessageSetCorrect) MarshalToSizedBufferVT(dAtA []byt
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	return len(dAtA) - i, nil
 }
@@ -2323,9 +2356,9 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) MarshalToSizedBufferVT(
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.Str != nil {
 		i -= len(*m.Str)
@@ -2365,9 +2398,9 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) MarshalToSizedBufferVT(
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.I != nil {
 		i = encodeVarint(dAtA, i, uint64(*m.I))
@@ -2403,9 +2436,9 @@ func (m *TestAllTypesProto2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if vtmsg, ok := m.OneofField.(interface {
 		MarshalToSizedBufferVT([]byte) (int, error)
@@ -3982,9 +4015,9 @@ func (m *ForeignMessageProto2) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.C != nil {
 		i = encodeVarint(dAtA, i, uint64(*m.C))
@@ -4020,9 +4053,9 @@ func (m *UnknownToTestAllTypes_OptionalGroup) MarshalToSizedBufferVT(dAtA []byte
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.A != nil {
 		i = encodeVarint(dAtA, i, uint64(*m.A))
@@ -4058,9 +4091,9 @@ func (m *UnknownToTestAllTypes) MarshalToSizedBufferVT(dAtA []byte) (int, error)
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if len(m.RepeatedInt32) > 0 {
 		for iNdEx := len(m.RepeatedInt32) - 1; iNdEx >= 0; iNdEx-- {
@@ -4155,9 +4188,9 @@ func (m *NullHypothesisProto2) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	return len(dAtA) - i, nil
 }
@@ -4188,9 +4221,9 @@ func (m *EnumOnlyProto2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	return len(dAtA) - i, nil
 }
@@ -4221,9 +4254,9 @@ func (m *OneStringProto2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.Data != nil {
 		i -= len(*m.Data)
@@ -4259,7 +4292,7 @@ func (m *TestAllTypesProto2_NestedMessage) SizeVT() (n int) {
 		l = m.Corecursive.SizeVT()
 		n += 1 + l + sov(uint64(l))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4275,7 +4308,7 @@ func (m *TestAllTypesProto2_Data) SizeVT() (n int) {
 	if m.GroupUint32 != nil {
 		n += 2 + sov(uint64(*m.GroupUint32))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4285,7 +4318,7 @@ func (m *TestAllTypesProto2_MessageSetCorrect) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4299,7 +4332,7 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) SizeVT() (n int) {
 		l = len(*m.Str)
 		n += 2 + l + sov(uint64(l))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4312,7 +4345,7 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) SizeVT() (n int) {
 	if m.I != nil {
 		n += 1 + sov(uint64(*m.I))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4889,7 +4922,7 @@ func (m *TestAllTypesProto2) SizeVT() (n int) {
 	if m.FieldName18__ != nil {
 		n += 2 + sov(uint64(*m.FieldName18__))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -4988,7 +5021,7 @@ func (m *ForeignMessageProto2) SizeVT() (n int) {
 	if m.C != nil {
 		n += 1 + sov(uint64(*m.C))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5001,7 +5034,7 @@ func (m *UnknownToTestAllTypes_OptionalGroup) SizeVT() (n int) {
 	if m.A != nil {
 		n += 1 + sov(uint64(*m.A))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5034,7 +5067,7 @@ func (m *UnknownToTestAllTypes) SizeVT() (n int) {
 			n += 2 + sov(uint64(e))
 		}
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5044,7 +5077,7 @@ func (m *NullHypothesisProto2) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5054,7 +5087,7 @@ func (m *EnumOnlyProto2) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5068,7 +5101,7 @@ func (m *OneStringProto2) SizeVT() (n int) {
 		l = len(*m.Data)
 		n += 1 + l + sov(uint64(l))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -5079,6 +5112,8 @@ func soz(x uint64) (n int) {
 	return sov(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
 func (m *TestAllTypesProto2_NestedMessage) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5175,9 +5210,12 @@ func (m *TestAllTypesProto2_NestedMessage) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -5186,6 +5224,8 @@ func (m *TestAllTypesProto2_NestedMessage) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *TestAllTypesProto2_Data) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5266,9 +5306,12 @@ func (m *TestAllTypesProto2_Data) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -5277,6 +5320,8 @@ func (m *TestAllTypesProto2_Data) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *TestAllTypesProto2_MessageSetCorrect) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5324,10 +5369,13 @@ func (m *TestAllTypesProto2_MessageSetCorrect) UnmarshalVT(dAtA []byte) error {
 				}
 				iNdEx += skippy
 			} else {
-				m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 				iNdEx += skippy
 			}
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -5336,6 +5384,8 @@ func (m *TestAllTypesProto2_MessageSetCorrect) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *TestAllTypesProto2_MessageSetCorrectExtension1) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5409,9 +5459,12 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) UnmarshalVT(dAtA []byte
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -5420,6 +5473,8 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension1) UnmarshalVT(dAtA []byte
 	return nil
 }
 func (m *TestAllTypesProto2_MessageSetCorrectExtension2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5480,9 +5535,12 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) UnmarshalVT(dAtA []byte
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -5491,6 +5549,8 @@ func (m *TestAllTypesProto2_MessageSetCorrectExtension2) UnmarshalVT(dAtA []byte
 	return nil
 }
 func (m *TestAllTypesProto2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -11883,10 +11943,13 @@ func (m *TestAllTypesProto2) UnmarshalVT(dAtA []byte) error {
 				}
 				iNdEx += skippy
 			} else {
-				m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 				iNdEx += skippy
 			}
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -11895,6 +11958,8 @@ func (m *TestAllTypesProto2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *ForeignMessageProto2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -11955,9 +12020,12 @@ func (m *ForeignMessageProto2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -11966,6 +12034,8 @@ func (m *ForeignMessageProto2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *UnknownToTestAllTypes_OptionalGroup) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -12026,9 +12096,12 @@ func (m *UnknownToTestAllTypes_OptionalGroup) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -12037,6 +12110,8 @@ func (m *UnknownToTestAllTypes_OptionalGroup) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *UnknownToTestAllTypes) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -12301,9 +12376,12 @@ func (m *UnknownToTestAllTypes) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -12312,6 +12390,8 @@ func (m *UnknownToTestAllTypes) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *NullHypothesisProto2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -12352,9 +12432,12 @@ func (m *NullHypothesisProto2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -12363,6 +12446,8 @@ func (m *NullHypothesisProto2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *EnumOnlyProto2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -12403,9 +12488,12 @@ func (m *EnumOnlyProto2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -12414,6 +12502,8 @@ func (m *EnumOnlyProto2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *OneStringProto2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -12487,9 +12577,12 @@ func (m *OneStringProto2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {

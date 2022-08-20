@@ -29,9 +29,10 @@ func (m *Test1) CloneVT() *Test1 {
 		copy(tmpContainer, rhs)
 		r.Sl = tmpContainer
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -52,9 +53,10 @@ func (m *Test2) CloneVT() *Test2 {
 		}
 		r.Sl = tmpContainer
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -88,9 +90,10 @@ func (m *Slice2) CloneVT() *Slice2 {
 		copy(tmpContainer, rhs)
 		r.C = tmpContainer
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -106,9 +109,10 @@ func (m *Element2) CloneVT() *Element2 {
 	r := &Element2{
 		A: m.A,
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -132,9 +136,8 @@ func (this *Test1) EqualVT(that *Test1) bool {
 			return false
 		}
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *Test2) EqualVT(that *Test2) bool {
 	if this == nil {
 		return that == nil
@@ -158,9 +161,8 @@ func (this *Test2) EqualVT(that *Test2) bool {
 			}
 		}
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *Slice2) EqualVT(that *Slice2) bool {
 	if this == nil {
 		return that == nil
@@ -200,9 +202,8 @@ func (this *Slice2) EqualVT(that *Slice2) bool {
 	if this.F != that.F {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *Element2) EqualVT(that *Element2) bool {
 	if this == nil {
 		return that == nil
@@ -212,9 +213,8 @@ func (this *Element2) EqualVT(that *Element2) bool {
 	if this.A != that.A {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (m *Test1) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -241,9 +241,9 @@ func (m *Test1) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if len(m.Sl) > 0 {
 		for iNdEx := len(m.Sl) - 1; iNdEx >= 0; iNdEx-- {
@@ -283,9 +283,9 @@ func (m *Test2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if len(m.Sl) > 0 {
 		for iNdEx := len(m.Sl) - 1; iNdEx >= 0; iNdEx-- {
@@ -328,9 +328,9 @@ func (m *Slice2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.F != 0 {
 		i = encodeVarint(dAtA, i, uint64(m.F))
@@ -412,9 +412,9 @@ func (m *Element2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.A != 0 {
 		i = encodeVarint(dAtA, i, uint64(m.A))
@@ -475,7 +475,7 @@ func (m *Test1) SizeVT() (n int) {
 			n += 1 + l + sov(uint64(l))
 		}
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -491,7 +491,7 @@ func (m *Test2) SizeVT() (n int) {
 			n += 1 + l + sov(uint64(l))
 		}
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -529,7 +529,7 @@ func (m *Slice2) SizeVT() (n int) {
 	if m.F != 0 {
 		n += 1 + sov(uint64(m.F))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -542,11 +542,13 @@ func (m *Element2) SizeVT() (n int) {
 	if m.A != 0 {
 		n += 1 + sov(uint64(m.A))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
 func (m *Test1) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -619,9 +621,12 @@ func (m *Test1) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -630,6 +635,8 @@ func (m *Test1) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *Test2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -711,9 +718,12 @@ func (m *Test2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -722,6 +732,8 @@ func (m *Test2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *Slice2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1000,9 +1012,12 @@ func (m *Slice2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -1011,6 +1026,8 @@ func (m *Slice2) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *Element2) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1070,9 +1087,12 @@ func (m *Element2) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {

@@ -556,7 +556,7 @@ func (p *marshal) message(proto3 bool, message *protogen.Message) {
 	p.P(`}`)
 	p.P(`size := `, p.FastCallExpr(`SizeVT`, `m`, message.GoIdent))
 	p.P(`dAtA = make([]byte, size)`)
-	p.P(`n, err := `, p.FastCallExpr(`MarshalToSizedBufferVT`, `m`, message.GoIdent, `dAtA[:size])`))
+	p.P(`n, err := `, p.FastCallExpr(`MarshalToSizedBufferVT`, `m`, message.GoIdent, `dAtA[:size]`))
 	p.P(`if err != nil {`)
 	p.P(`return nil, err`)
 	p.P(`}`)
@@ -565,7 +565,7 @@ func (p *marshal) message(proto3 bool, message *protogen.Message) {
 	p.P(``)
 	p.FuncHeader(`MarshalToVT`, `m`, message.GoIdent, `dAtA []byte`, `int, error`)
 	p.P(`size := `, p.FastCallExpr(`SizeVT`, `m`, message.GoIdent))
-	p.P(`return m.MarshalToSizedBufferVT(dAtA[:size])`)
+	p.P(`return `, p.FastCallExpr(`MarshalToSizedBufferVT`, `m`, message.GoIdent, `dAtA[:size]`))
 	p.P(`}`)
 	p.P(``)
 	p.FuncHeader(`MarshalToSizedBufferVT`, `m`, message.GoIdent, `dAtA []byte`, `int, error`)
@@ -616,8 +616,8 @@ func (p *marshal) message(proto3 bool, message *protogen.Message) {
 			p.P(`var err error`)
 			p.P(`switch t := m.`, fieldname, `.(type) {`)
 			for _, f := range field.Oneof.Fields {
-				p.P(`case *`, f.Message.GoIdent, `:`)
-				p.P(`size, err = `, p.FastCallExpr(`MarshalToSizedBufferVT`, `t`, f.Message.GoIdent, `dAtA[:i]`))
+				p.P(`case *`, f.GoIdent, `:`)
+				p.P(`size, err = `, p.FastCallExpr(`MarshalToSizedBufferVT`, `t`, f.GoIdent, `dAtA[:i]`))
 			}
 			p.P(`}`)
 			p.P(`if err != nil {`)
@@ -645,8 +645,8 @@ func (p *marshal) message(proto3 bool, message *protogen.Message) {
 			continue
 		}
 		p.FuncHeader(`MarshalToVT`, `m`, field.GoIdent, `dAtA []byte`, `int, error`)
-		p.P(`size := `, p.FastCallExpr(`SizeVT`, `m`, field.Message.GoIdent))
-		p.P(`return `, p.FastCallExpr(`MarshalToSizedBufferVT`, `m`, field.Message.GoIdent, `dAtA[:size])`))
+		p.P(`size := `, p.FastCallExpr(`SizeVT`, `m`, field.GoIdent))
+		p.P(`return `, p.FastCallExpr(`MarshalToSizedBufferVT`, `m`, field.GoIdent, `dAtA[:size]`))
 		p.P(`}`)
 		p.P(``)
 		p.FuncHeader(`MarshalToSizedBufferVT`, `m`, field.GoIdent, `dAtA []byte`, `int, error`)

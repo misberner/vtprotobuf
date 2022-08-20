@@ -8,6 +8,17 @@ install:
 	go install -tags protolegacy ./cmd/protoc-gen-go-vtproto
 # 	go install -tags protolegacy github.com/gogo/protobuf/protoc-gen-gofast
 
+install-builtins-gen:
+	go generate ./cmd/internal/protoc-gen-go-vtproto-builtins
+	go install -tags protolegacy,nobuiltins ./cmd/internal/protoc-gen-go-vtproto-builtins
+
+gen-prototype-helpers: install-builtins-gen
+	$(PROTOBUF_ROOT)/src/protoc \
+		--go-vtproto-builtins_out=support/types --plugin protoc-gen-go-vtproto-builtins="${GOBIN}/protoc-gen-go-vtproto-builtins" \
+		--go-vtproto-builtins_opt=registry_file=./generator/builtins/builtins.go \
+		--go-vtproto-builtins_opt=registry_package=builtins \
+		dummy/dummy.proto
+
 gen-conformance:
 	$(PROTOBUF_ROOT)/src/protoc \
 		--proto_path=$(PROTOBUF_ROOT) \

@@ -6,16 +6,13 @@ package generator
 
 import (
 	"fmt"
-	"strings"
-
+	"github.com/planetscale/vtprotobuf/generator/builtins"
 	"github.com/planetscale/vtprotobuf/vtproto"
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
-
-type Expr []interface{}
 
 type GeneratedFile struct {
 	*protogen.GeneratedFile
@@ -122,18 +119,18 @@ func (p *GeneratedFile) P(args ...interface{}) {
 }
 
 func (p *GeneratedFile) GetSupportPkgFor(ty protogen.GoIdent) protogen.GoImportPath {
-	if strings.HasPrefix(ty.GoImportPath.String(), "google.golang.org/protobuf/types/") {
-		return `github.com/planetscale/vtprotobuf/support/types/` + ty.GoImportPath
+	if p.Ext.SupportGenPrefix != "" && p.IsLocalIdent(ty) {
+		return p.Ext.SupportGenPrefix + `/` + ty.GoImportPath
 	}
-	return ""
+	return builtins.LookupSupportPkg(ty)
 }
 
-func (p *GeneratedFile) FastCallExpr(methodName, varName string, varTy protogen.GoIdent, args ...interface{}) Expr {
-	if p.IsLocalIdent(varTy) {
-		return Expr{varName, `.`, methodName, `(`, Expr(args), `)`}
-	}
+func (p *GeneratedFile) FastCallExpr(methodName, varName string, varTy protogen.GoIdent, args ...interface{}) []interface{} {
 	if supportPkg := p.GetSupportPkgFor(varTy); supportPkg != "" {
-		return Expr{supportPkg.Ident(methodName + "_" + varTy.GoName), `(`, varName, `, `, Expr(args), `)`}
+		return p.X(supportPkg.Ident(methodName+"_"+varTy.GoName), `(`, varName, `, `, args, `)`)
+	}
+	if p.IsLocalIdent(varTy) {
+		return p.X(varName, `.`, methodName, `(`, args, `)`)
 	}
 	return nil
 }
@@ -167,7 +164,7 @@ func (p *GeneratedFile) X(args ...interface{}) []interface{} {
 }
 
 func (p *GeneratedFile) IsExternal() bool {
-	return false
+	return p.Ext.SupportGenPrefix != ""
 }
 
 func (p *GeneratedFile) InterfaceForOneof(oneof *protogen.Oneof) string {

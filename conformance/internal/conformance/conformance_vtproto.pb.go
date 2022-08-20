@@ -28,9 +28,10 @@ func (m *FailureSet) CloneVT() *FailureSet {
 		copy(tmpContainer, rhs)
 		r.Failure = tmpContainer
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -55,9 +56,10 @@ func (m *ConformanceRequest) CloneVT() *ConformanceRequest {
 			CloneVT() isConformanceRequest_Payload
 		}).CloneVT()
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -119,9 +121,10 @@ func (m *ConformanceResponse) CloneVT() *ConformanceResponse {
 			CloneVT() isConformanceResponse_Result
 		}).CloneVT()
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -220,9 +223,10 @@ func (m *JspbEncodingConfig) CloneVT() *JspbEncodingConfig {
 	r := &JspbEncodingConfig{
 		UseJspbArrayAnyFormat: m.UseJspbArrayAnyFormat,
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -246,9 +250,8 @@ func (this *FailureSet) EqualVT(that *FailureSet) bool {
 			return false
 		}
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *ConformanceRequest) EqualVT(that *ConformanceRequest) bool {
 	if this == nil {
 		return that == nil
@@ -261,10 +264,23 @@ func (this *ConformanceRequest) EqualVT(that *ConformanceRequest) bool {
 		if that.Payload == nil {
 			return false
 		}
-		if !this.Payload.(interface {
-			EqualVT(isConformanceRequest_Payload) bool
-		}).EqualVT(that.Payload) {
-			return false
+		switch f := this.Payload.(type) {
+		case *ConformanceRequest_ProtobufPayload:
+			if !f.EqualVT(that.Payload) {
+				return false
+			}
+		case *ConformanceRequest_JsonPayload:
+			if !f.EqualVT(that.Payload) {
+				return false
+			}
+		case *ConformanceRequest_JspbPayload:
+			if !f.EqualVT(that.Payload) {
+				return false
+			}
+		case *ConformanceRequest_TextPayload:
+			if !f.EqualVT(that.Payload) {
+				return false
+			}
 		}
 	}
 	if this.RequestedOutputFormat != that.RequestedOutputFormat {
@@ -282,9 +298,8 @@ func (this *ConformanceRequest) EqualVT(that *ConformanceRequest) bool {
 	if this.PrintUnknownFields != that.PrintUnknownFields {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *ConformanceRequest_ProtobufPayload) EqualVT(thatIface isConformanceRequest_Payload) bool {
 	that, ok := thatIface.(*ConformanceRequest_ProtobufPayload)
 	if !ok {
@@ -365,15 +380,43 @@ func (this *ConformanceResponse) EqualVT(that *ConformanceResponse) bool {
 		if that.Result == nil {
 			return false
 		}
-		if !this.Result.(interface {
-			EqualVT(isConformanceResponse_Result) bool
-		}).EqualVT(that.Result) {
-			return false
+		switch f := this.Result.(type) {
+		case *ConformanceResponse_ParseError:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_SerializeError:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_RuntimeError:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_ProtobufPayload:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_JsonPayload:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_Skipped:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_JspbPayload:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
+		case *ConformanceResponse_TextPayload:
+			if !f.EqualVT(that.Result) {
+				return false
+			}
 		}
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (this *ConformanceResponse_ParseError) EqualVT(thatIface isConformanceResponse_Result) bool {
 	that, ok := thatIface.(*ConformanceResponse_ParseError)
 	if !ok {
@@ -519,9 +562,8 @@ func (this *JspbEncodingConfig) EqualVT(that *JspbEncodingConfig) bool {
 	if this.UseJspbArrayAnyFormat != that.UseJspbArrayAnyFormat {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (m *FailureSet) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -548,9 +590,9 @@ func (m *FailureSet) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if len(m.Failure) > 0 {
 		for iNdEx := len(m.Failure) - 1; iNdEx >= 0; iNdEx-- {
@@ -590,9 +632,9 @@ func (m *ConformanceRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if vtmsg, ok := m.Payload.(interface {
 		MarshalToSizedBufferVT([]byte) (int, error)
@@ -725,9 +767,9 @@ func (m *ConformanceResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if vtmsg, ok := m.Result.(interface {
 		MarshalToSizedBufferVT([]byte) (int, error)
@@ -879,9 +921,9 @@ func (m *JspbEncodingConfig) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.UseJspbArrayAnyFormat {
 		i--
@@ -908,7 +950,7 @@ func (m *FailureSet) SizeVT() (n int) {
 			n += 1 + l + sov(uint64(l))
 		}
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -938,7 +980,7 @@ func (m *ConformanceRequest) SizeVT() (n int) {
 	if m.PrintUnknownFields {
 		n += 2
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -991,7 +1033,7 @@ func (m *ConformanceResponse) SizeVT() (n int) {
 	if vtmsg, ok := m.Result.(interface{ SizeVT() int }); ok {
 		n += vtmsg.SizeVT()
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -1084,11 +1126,13 @@ func (m *JspbEncodingConfig) SizeVT() (n int) {
 	if m.UseJspbArrayAnyFormat {
 		n += 2
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
 func (m *FailureSet) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1161,9 +1205,12 @@ func (m *FailureSet) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -1172,6 +1219,8 @@ func (m *FailureSet) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *ConformanceRequest) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1467,9 +1516,12 @@ func (m *ConformanceRequest) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -1478,6 +1530,8 @@ func (m *ConformanceRequest) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *ConformanceResponse) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1775,9 +1829,12 @@ func (m *ConformanceResponse) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {
@@ -1786,6 +1843,8 @@ func (m *ConformanceResponse) UnmarshalVT(dAtA []byte) error {
 	return nil
 }
 func (m *JspbEncodingConfig) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1846,9 +1905,12 @@ func (m *JspbEncodingConfig) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {

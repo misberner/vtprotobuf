@@ -42,23 +42,23 @@ func main() {
 	var allowEmpty bool
 	var features string
 	poolable := make(ObjectSet)
-	var supportGen string
 
 	var f flag.FlagSet
 	f.BoolVar(&allowEmpty, "allow-empty", false, "allow generation of empty files")
 	f.Var(poolable, "pool", "use memory pooling for this object")
 	f.StringVar(&features, "features", "all", "list of features to generate (separated by '+')")
-	f.StringVar(&supportGen, "support-gen", "", "if nonempty, generate support code")
 
 	protogen.Options{ParamFunc: f.Set}.Run(func(plugin *protogen.Plugin) error {
-		return generateAllFiles(plugin, strings.Split(features, "+"), poolable, allowEmpty, supportGen)
+		return generateAllFiles(plugin, strings.Split(features, "+"), poolable, allowEmpty)
 	})
 }
 
 var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
-func generateAllFiles(plugin *protogen.Plugin, featureNames []string, poolable ObjectSet, allowEmpty bool, supportGen string) error {
-	ext := &generator.Extensions{Poolable: poolable}
+func generateAllFiles(plugin *protogen.Plugin, featureNames []string, poolable ObjectSet, allowEmpty bool) error {
+	ext := &generator.Extensions{
+		Poolable: poolable,
+	}
 	gen, err := generator.NewGenerator(plugin.Files, featureNames, ext)
 	if err != nil {
 		return err
@@ -69,11 +69,7 @@ func generateAllFiles(plugin *protogen.Plugin, featureNames []string, poolable O
 			continue
 		}
 
-		goImportPath := file.GoImportPath
-		if supportGen != "" {
-			goImportPath = protogen.GoImportPath(supportGen) + `/` + goImportPath
-		}
-		gf := plugin.NewGeneratedFile(file.GeneratedFilenamePrefix+"_vtproto.pb.go", goImportPath)
+		gf := plugin.NewGeneratedFile(file.GeneratedFilenamePrefix+"_vtproto.pb.go", file.GoImportPath)
 		if !gen.GenerateFile(gf, file) && !allowEmpty {
 			gf.Skip()
 		}

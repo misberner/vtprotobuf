@@ -200,9 +200,11 @@ func (p *clone) body(allFieldsNullable bool, typeName protogen.GoIdent, fields [
 		}
 		// Shortcut: for types where we know that an optimized clone method exists, we can call it directly as it is
 		// nil-safe.
-		if field.Desc.Cardinality() != protoreflect.Repeated && field.Message != nil && p.IsLocalMessage(field.Message) {
-			p.P(field.GoName, `: m.`, field.GoName, `.`, cloneName, `(),`)
-			continue
+		if field.Desc.Cardinality() != protoreflect.Repeated && field.Message != nil {
+			if expr := p.FastCallExpr(cloneName, `m.`+field.GoName, field.Message.GoIdent); expr != nil {
+				p.P(field.GoName, `: `, expr, `,`)
+				continue
+			}
 		}
 		refFields = append(refFields, field)
 	}

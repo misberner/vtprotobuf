@@ -107,7 +107,7 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 		}
 	}
 
-	p.P(`return string(`, p.GetUnknownFieldsExpr(`this`), ` == string(`, p.GetUnknownFieldsExpr(`that`), `)`)
+	p.P(`return string(`, p.GetUnknownFieldsExpr(`this`), `) == string(`, p.GetUnknownFieldsExpr(`that`), `)`)
 	p.P(`}`)
 
 	for _, field := range message.Fields {
@@ -120,12 +120,11 @@ func (p *equal) message(proto3 bool, message *protogen.Message) {
 }
 
 func (p *equal) oneof(field *protogen.Field) {
-	ccTypeName := field.GoIdent.GoName
 	ccInterfaceName := p.InterfaceForOneof(field.Oneof)
 	fieldname := field.GoName
 
 	p.FuncHeader(equalName, `this`, field.GoIdent, p.X(`thatIface `, ccInterfaceName), `bool`)
-	p.P(`that, ok := thatIface.(*`, ccTypeName, `)`)
+	p.P(`that, ok := thatIface.(*`, field.GoIdent, `)`)
 	p.P(`if !ok {`)
 	p.P(`return false`)
 	p.P(`}`)

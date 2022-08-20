@@ -17,7 +17,8 @@ type featureHelpers struct {
 }
 
 type Extensions struct {
-	Poolable map[protogen.GoIdent]bool
+	Poolable         map[protogen.GoIdent]bool
+	SupportGenPrefix protogen.GoImportPath
 }
 
 type Generator struct {
