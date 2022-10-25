@@ -16,9 +16,8 @@ import (
 
 type GeneratedFile struct {
 	*protogen.GeneratedFile
-	Ext             *Extensions
-	LocalPackages   map[string]bool
-	LocalGoPackages map[protogen.GoImportPath]struct{}
+	Ext              *Extensions
+	TargetGoPackages map[protogen.GoImportPath]struct{}
 }
 
 func (p *GeneratedFile) Ident(path, ident string) string {
@@ -90,16 +89,15 @@ func (p *GeneratedFile) FieldGoType(field *protogen.Field) (goType string, point
 	return goType, pointer
 }
 
-func (p *GeneratedFile) IsLocalMessage(message *protogen.Message) bool {
-	pkg := string(message.Desc.ParentFile().Package())
-	return p.LocalPackages[pkg]
-}
-
-func (p *GeneratedFile) IsLocalIdent(ident protogen.GoIdent) bool {
-	_, ok := p.LocalGoPackages[ident.GoImportPath]
+// IsGenerationTargetType returns a boolean indicating whether the type identified by the argument
+// is a (message or oneof-wrapper) type for which code is generated.
+func (p *GeneratedFile) IsGenerationTargetType(typeIdent protogen.GoIdent) bool {
+	_, ok := p.TargetGoPackages[typeIdent.GoImportPath]
 	return ok
 }
 
+// flattenInto recursively flattens the input slice, by recursively expanding any slice elements that are
+// of type []interface{}. nil interface elements are removed.
 func flattenInto(out, in []interface{}) []interface{} {
 	for _, elem := range in {
 		switch t := elem.(type) {
@@ -118,9 +116,14 @@ func (p *GeneratedFile) P(args ...interface{}) {
 	p.GeneratedFile.P(flattenInto(nil, args)...)
 }
 
+// GetSupportPkgFor returns the import path of the support package containing optimized functions operating on the
+// given message type, if any.
 func (p *GeneratedFile) GetSupportPkgFor(ty protogen.GoIdent) protogen.GoImportPath {
-	if p.Ext.SupportGenPrefix != "" && p.IsLocalIdent(ty) {
-		return p.Ext.SupportGenPrefix + `/` + ty.GoImportPath
+	if p.IsGenerationTargetType(ty) {
+		if p.Ext.SupportGenPrefix != "" {
+			return p.Ext.SupportGenPrefix + `/` + ty.GoImportPath
+		}
+		return ""
 	}
 	return builtins.LookupSupportPkg(ty)
 }
@@ -129,7 +132,7 @@ func (p *GeneratedFile) FastCallExpr(methodName, varName string, varTy protogen.
 	if supportPkg := p.GetSupportPkgFor(varTy); supportPkg != "" {
 		return p.X(supportPkg.Ident(methodName+"_"+varTy.GoName), `(`, varName, `, `, args, `)`)
 	}
-	if p.IsLocalIdent(varTy) {
+	if p.IsGenerationTargetType(varTy) {
 		return p.X(varName, `.`, methodName, `(`, args, `)`)
 	}
 	return nil
@@ -144,7 +147,7 @@ func (p *GeneratedFile) FuncHeader(name string, receiver string, receiverType pr
 	}
 }
 
-func (p *GeneratedFile) GetUnknownFieldsExpr(x string) string {
+func (p *GeneratedFile) GetUnknownFieldsExpr(x string) interface{} {
 	if false {
 		return fmt.Sprintf("%s.unknownFields", x)
 	}

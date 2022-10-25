@@ -1,6 +1,8 @@
 export GOBIN=$(PWD)/bin
 export PROTOBUF_ROOT=$(PWD)/_vendor/protobuf-3.20.0
 
+BUILTINS_SUPPORT_PKG_REL := support/types
+
 .PHONY: install test gen-conformance gen-include genall
 
 install:
@@ -8,9 +10,19 @@ install:
 	go install -tags protolegacy ./cmd/protoc-gen-go-vtproto
 # 	go install -tags protolegacy github.com/gogo/protobuf/protoc-gen-gofast
 
-install-builtins-gen:
-	go generate ./cmd/internal/protoc-gen-go-vtproto-builtins
-	go install -tags protolegacy,nobuiltins ./cmd/internal/protoc-gen-go-vtproto-builtins
+go-generate:
+	go generate ./internal/builtinprotos/descriptors
+
+install-builtins-gen: go-generate
+	go install -tags protolegacy ./internal/cmd/protoc-gen-go-vtproto-builtins
+
+gen-builtins: install-builtins-gen
+	$(PROTOBUF_ROOT)/src/protoc \
+	  	--plugin protoc-gen-go-vtproto-builtins="${GOBIN}/protoc-gen-go-vtproto-builtins" \
+		--go-vtproto-builtins_out="$(BUILTINS_SUPPORT_PKG_REL)" \
+		--go-vtproto-builtins_opt=support_pkg_root="$(shell go list -m)/$(BUILTINS_SUPPORT_PKG_REL)" \
+		--go-vtproto-builtins_opt=registry_file=./internal/builtinprotos/registry/registry.go \
+		internal/builtinprotos/gen-helpers/dummy.proto
 
 gen-prototype-helpers: install-builtins-gen
 	$(PROTOBUF_ROOT)/src/protoc \

@@ -151,7 +151,7 @@ func (p *clone) cloneField(lhsBase, rhsBase string, allFieldsNullable bool, fiel
 }
 
 func (p *clone) generateCloneMethodsForMessage(proto3 bool, message *protogen.Message) {
-	p.FuncHeader(cloneName, "m", message.GoIdent, p.X(), p.X(`*`, message.GoIdent))
+	p.FuncHeader(cloneName, "m", message.GoIdent, ``, p.X(`*`, message.GoIdent))
 	p.body(!proto3, message.GoIdent, message.Fields, true)
 	p.P(`}`)
 	p.P()
@@ -237,7 +237,7 @@ func (p *clone) generateCloneMethodsForOneof(field *protogen.Field) {
 	} else {
 		retTy = p.X(`*`, field.GoIdent)
 	}
-	p.FuncHeader(cloneName, `m`, field.GoIdent, p.X(), retTy)
+	p.FuncHeader(cloneName, `m`, field.GoIdent, ``, retTy)
 
 	// Create a "fake" field for the single oneof member, pretending it is not a oneof field.
 	fieldInOneof := *field
