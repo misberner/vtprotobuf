@@ -1,0 +1,6 @@
+// This is a dummy protobuf file. It has no contents; its sole purpose is to allow an invocation of
+// protoc to facilitate the generation of vtproto helpers for builtin proto message types.
+
+syntax = "proto3";
+
+package dummy;

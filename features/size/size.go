@@ -52,10 +52,8 @@ func (p *size) GenerateHelpers() {
 }
 
 func (p *size) messageSize(varName, sizeName string, message *protogen.Message) {
-	local := p.IsLocalMessage(message)
-
-	if local {
-		p.P(`l = `, varName, `.`, sizeName, `()`)
+	if expr := p.FastCallExpr(sizeName, varName, message.GoIdent); expr != nil {
+		p.P(`l = `, expr)
 	} else {
 		p.P(`if size, ok := interface{}(`, varName, `).(interface{`)
 		p.P(sizeName, `() int`)
@@ -283,9 +281,8 @@ func (p *size) message(proto3 bool, message *protogen.Message) {
 	p.once = true
 
 	sizeName := "SizeVT"
-	ccTypeName := message.GoIdent
 
-	p.P(`func (m *`, ccTypeName, `) `, sizeName, `() (n int) {`)
+	p.FuncHeader(sizeName, `m`, message.GoIdent, ``, `n int`)
 	p.P(`if m == nil {`)
 	p.P(`return 0`)
 	p.P(`}`)
@@ -296,17 +293,29 @@ func (p *size) message(proto3 bool, message *protogen.Message) {
 		oneof := field.Oneof != nil && !field.Oneof.Desc.IsSynthetic()
 		if !oneof {
 			p.field(proto3, false, field, sizeName)
+			continue
+		}
+		fieldname := field.Oneof.GoName
+		if _, ok := oneofs[fieldname]; ok {
+			continue
+		}
+		oneofs[fieldname] = struct{}{}
+		if !p.IsExternal() {
+			p.P(`if vtmsg, ok := m.`, fieldname, `.(interface{ SizeVT() int }); ok {`)
+			p.P(`n+=vtmsg.`, sizeName, `()`)
+			p.P(`}`)
 		} else {
-			fieldname := field.Oneof.GoName
-			if _, ok := oneofs[fieldname]; !ok {
-				oneofs[fieldname] = struct{}{}
-				p.P(`if vtmsg, ok := m.`, fieldname, `.(interface{ SizeVT() int }); ok {`)
-				p.P(`n+=vtmsg.`, sizeName, `()`)
-				p.P(`}`)
+			p.P(`if m.`, fieldname, ` != nil {`)
+			p.P(`switch t := m.`, fieldname, `.(type) {`)
+			for _, f := range field.Oneof.Fields {
+				p.P(`case *`, f.GoIdent, `:`)
+				p.P(`n+=`, p.FastCallExpr(sizeName, `t`, f.GoIdent))
 			}
+			p.P(`}`)
+			p.P(`}`)
 		}
 	}
-	p.P(`n+=len(m.unknownFields)`)
+	p.P(`n+=len(`, p.GetUnknownFieldsExpr(`m`), `)`)
 	p.P(`return n`)
 	p.P(`}`)
 	p.P()
@@ -315,8 +324,7 @@ func (p *size) message(proto3 bool, message *protogen.Message) {
 		if field.Oneof == nil || field.Oneof.Desc.IsSynthetic() {
 			continue
 		}
-		ccTypeName := field.GoIdent
-		p.P(`func (m *`, ccTypeName, `) `, sizeName, `() (n int) {`)
+		p.FuncHeader(sizeName, `m`, field.GoIdent, ``, `n int`)
 		p.P(`if m == nil {`)
 		p.P(`return 0`)
 		p.P(`}`)

@@ -91,9 +91,10 @@ func (m *OptionalFieldInProto3) CloneVT() *OptionalFieldInProto3 {
 		tmpVal := *rhs
 		r.OptionalEnum = &tmpVal
 	}
-	if len(m.unknownFields) > 0 {
-		r.unknownFields = make([]byte, len(m.unknownFields))
-		copy(r.unknownFields, m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); len(uf) > 0 {
+		ufc := make([]byte, len(uf))
+		copy(ufc, uf)
+		r.unknownFields = ufc
 	}
 	return r
 }
@@ -156,9 +157,8 @@ func (this *OptionalFieldInProto3) EqualVT(that *OptionalFieldInProto3) bool {
 	if p, q := this.OptionalEnum, that.OptionalEnum; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	return string(this.unknownFields) == string(that.unknownFields)
+	return string(this.ProtoReflect().GetUnknown()) == string(that.ProtoReflect().GetUnknown())
 }
-
 func (m *OptionalFieldInProto3) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -185,9 +185,9 @@ func (m *OptionalFieldInProto3) MarshalToSizedBufferVT(dAtA []byte) (int, error)
 	_ = i
 	var l int
 	_ = l
-	if m.unknownFields != nil {
-		i -= len(m.unknownFields)
-		copy(dAtA[i:], m.unknownFields)
+	if uf := m.ProtoReflect().GetUnknown(); uf != nil {
+		i -= len(uf)
+		copy(dAtA[i:], uf)
 	}
 	if m.OptionalEnum != nil {
 		i = encodeVarint(dAtA, i, uint64(*m.OptionalEnum))
@@ -360,7 +360,7 @@ func (m *OptionalFieldInProto3) SizeVT() (n int) {
 	if m.OptionalEnum != nil {
 		n += 2 + sov(uint64(*m.OptionalEnum))
 	}
-	n += len(m.unknownFields)
+	n += len(m.ProtoReflect().GetUnknown())
 	return n
 }
 
@@ -371,6 +371,8 @@ func soz(x uint64) (n int) {
 	return sov(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
 func (m *OptionalFieldInProto3) UnmarshalVT(dAtA []byte) error {
+	unknownFields := m.ProtoReflect().GetUnknown()
+	unknownFieldsPreLen := len(unknownFields)
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -710,9 +712,12 @@ func (m *OptionalFieldInProto3) UnmarshalVT(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			unknownFields = append(unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
+	}
+	if len(unknownFields) > unknownFieldsPreLen {
+		m.unknownFields = unknownFields
 	}
 
 	if iNdEx > l {

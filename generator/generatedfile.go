@@ -6,7 +6,7 @@ package generator
 
 import (
 	"fmt"
-
+	"github.com/planetscale/vtprotobuf/generator/builtins"
 	"github.com/planetscale/vtprotobuf/vtproto"
 
 	"google.golang.org/protobuf/compiler/protogen"
@@ -16,8 +16,8 @@ import (
 
 type GeneratedFile struct {
 	*protogen.GeneratedFile
-	Ext           *Extensions
-	LocalPackages map[string]bool
+	Ext              *Extensions
+	TargetGoPackages map[protogen.GoImportPath]struct{}
 }
 
 func (p *GeneratedFile) Ident(path, ident string) string {
@@ -89,7 +89,90 @@ func (p *GeneratedFile) FieldGoType(field *protogen.Field) (goType string, point
 	return goType, pointer
 }
 
-func (p *GeneratedFile) IsLocalMessage(message *protogen.Message) bool {
-	pkg := string(message.Desc.ParentFile().Package())
-	return p.LocalPackages[pkg]
+// IsGenerationTargetType returns a boolean indicating whether the type identified by the argument
+// is a (message or oneof-wrapper) type for which code is generated.
+func (p *GeneratedFile) IsGenerationTargetType(typeIdent protogen.GoIdent) bool {
+	_, ok := p.TargetGoPackages[typeIdent.GoImportPath]
+	return ok
+}
+
+// flattenInto recursively flattens the input slice, by recursively expanding any slice elements that are
+// of type []interface{}. nil interface elements are removed.
+func flattenInto(out, in []interface{}) []interface{} {
+	for _, elem := range in {
+		switch t := elem.(type) {
+		case nil:
+			continue
+		case []interface{}:
+			out = flattenInto(out, t)
+		default:
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
+func (p *GeneratedFile) P(args ...interface{}) {
+	p.GeneratedFile.P(flattenInto(nil, args)...)
+}
+
+// GetSupportPkgFor returns the import path of the support package containing optimized functions operating on the
+// given message type, if any.
+func (p *GeneratedFile) GetSupportPkgFor(ty protogen.GoIdent) protogen.GoImportPath {
+	if p.IsGenerationTargetType(ty) {
+		if p.Ext.SupportGenPrefix != "" {
+			return p.Ext.SupportGenPrefix + `/` + ty.GoImportPath
+		}
+		return ""
+	}
+	return builtins.LookupSupportPkg(ty)
+}
+
+func (p *GeneratedFile) FastCallExpr(methodName, varName string, varTy protogen.GoIdent, args ...interface{}) []interface{} {
+	if supportPkg := p.GetSupportPkgFor(varTy); supportPkg != "" {
+		return p.X(supportPkg.Ident(methodName+"_"+varTy.GoName), `(`, varName, `, `, args, `)`)
+	}
+	if p.IsGenerationTargetType(varTy) {
+		return p.X(varName, `.`, methodName, `(`, args, `)`)
+	}
+	return nil
+}
+
+func (p *GeneratedFile) FuncHeader(name string, receiver string, receiverType protogen.GoIdent, params, returns interface{}) {
+	receiverQType := p.QualifiedGoIdent(receiverType)
+	if receiverQType == receiverType.GoName {
+		p.P(`func (`, receiver, ` *`, receiverQType, `) `, name, `(`, params, `) (`, returns, `) {`)
+	} else {
+		p.P(`func `, name, `_`, receiverType.GoName, `(`, receiver, ` *`, receiverQType, `, `, params, `) (`, returns, `) {`)
+	}
+}
+
+func (p *GeneratedFile) GetUnknownFieldsExpr(x string) interface{} {
+	if false {
+		return fmt.Sprintf("%s.unknownFields", x)
+	}
+	return fmt.Sprintf("%s.ProtoReflect().GetUnknown()", x)
+}
+
+func (p *GeneratedFile) SetUnknownFieldsStmt(x string, rhsExpr ...interface{}) {
+	if !p.IsExternal() {
+		p.P(x, `.unknownFields = `, rhsExpr)
+	} else {
+		p.P(x, `.ProtoReflect().SetUnknown(`, rhsExpr, `)`)
+	}
+}
+
+func (p *GeneratedFile) X(args ...interface{}) []interface{} {
+	return args
+}
+
+func (p *GeneratedFile) IsExternal() bool {
+	return p.Ext.SupportGenPrefix != ""
+}
+
+func (p *GeneratedFile) InterfaceForOneof(oneof *protogen.Oneof) string {
+	if p.IsExternal() {
+		return "interface{}"
+	}
+	return fmt.Sprintf("is%s", oneof.GoIdent.GoName)
 }
